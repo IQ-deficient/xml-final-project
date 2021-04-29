@@ -6,13 +6,18 @@ Vue.use(VueRouter)
 
 const routes = [
     {
-        path: '/login',
+        path: '/',
         name: 'Login',
         component: Home
     },
     {
         path: '/products',
         name: 'Products',
+        component: Home
+    },
+    {
+        path: '/suppliers',
+        name: 'Suppliers',
         component: Home
     },
     {
@@ -36,3 +41,13 @@ const router = new VueRouter({
 })
 
 export default router
+
+// In case someone alters the route in browser to non-existent, redirect to home page
+router.beforeEach(
+    (to, from, next) => {
+        if (to.matched.some(record => record.name)) {
+            next()
+        }
+        router.push('/products').catch(() => {
+        })
+    })

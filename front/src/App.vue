@@ -12,9 +12,9 @@
 
 export default {
    components: {},
-   mounted() {
-      this.$router.push({path: 'products'});
-   }
+   // mounted() {
+   //    this.$router.push({path: 'products'});
+   // }
 }
 </script>
 
