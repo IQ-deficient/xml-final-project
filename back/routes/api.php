@@ -14,6 +14,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+//Route::get('/xd', 'xdController@index');
+//Route::post("/xd", "xdController@store");
+//Route::put("/xd/{table_xd}", "xdController@update");
+//Route::delete("/xd/{table_xd}", "xdController@destroy");

@@ -22,8 +22,15 @@ class RedirectIfAuthenticated
         $guards = empty($guards) ? [null] : $guards;
 
         foreach ($guards as $guard) {
-            if (Auth::guard($guard)->check()) {
+            // Ako je ruta razlicita od register skipuj ovaj if
+            if (Auth::guard($guard)->check() && $request->getRequestUri() != '/register') {
                 return redirect(RouteServiceProvider::HOME);
+            }
+
+            // Ako je ruta razlicita od login i user nije logovan i nije admin baci ga na login
+            // Provjera da nije ruta login je obavezna kako se ne bi stvorila beskonacna petlja
+            if($request->getRequestUri() != '/login' && (Auth::user() == null || Auth::user()->type_id != 1)) {
+                return redirect('/login');
             }
         }
 
