@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\UserType;
 use Illuminate\Http\Request;
 
-class UserTypesTableController extends Controller
+class UserTypesController extends Controller
 {
     /**
      * Display a listing of the resource.

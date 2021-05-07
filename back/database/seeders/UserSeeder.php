@@ -5,8 +5,9 @@ namespace Database\Seeders;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
-class MtProductSupplierSeeder extends Seeder
+class UserSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,30 +16,30 @@ class MtProductSupplierSeeder extends Seeder
      */
     public function run()
     {
-        $mt_product_suppliers = [
+        $users = [
             [
-                'product_id' => 1,
-                'supplier_id' => 1,
-                'quantity' => 3,
+                'username' => 'Admin',
+                'password' => Hash::make('Admin'),
+                'type_id' => 1,
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ],
             [
-                'product_id' => 2,
-                'supplier_id' => 3,
-                'quantity' => 8,
+                'username' => 'Marko',
+                'password' => Hash::make('Marko'),
+                'type_id' => 2,
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ],
             [
-                'product_id' => 3,
-                'supplier_id' => 2,
-                'quantity' => 5,
+                'username' => 'Mirko',
+                'password' => Hash::make('Mirko'),
+                'type_id' => 3,
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ],
         ];
 
-        DB::table('mt_product_suppliers')->insert($mt_product_suppliers);
+        DB::table('users')->insert($users);
     }
 }

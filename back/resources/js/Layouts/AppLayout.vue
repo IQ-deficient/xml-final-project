@@ -20,7 +20,14 @@
                         <jet-nav-link :href="route('dashboard')" :active="route().current('dashboard')">
                            Products
                         </jet-nav-link>
-                        <jet-nav-link :href="route('sales')" :active="route().current('sales')">
+                        <jet-nav-link :href="route('suppliers')" :active="route().current('suppliers')">
+                           Suppliers
+                        </jet-nav-link>
+                        <!-- ADMIN and MODERATOR can view the SALES page -->
+                        <jet-nav-link
+                            v-if="$page.props.user != null && $page.props.user.type_id === 1 || $page.props.user.type_id === 3"
+                            :href="route('sales')"
+                            :active="route().current('sales')">
                            Sales
                         </jet-nav-link>
                      </div>
@@ -132,6 +139,7 @@
                                  Profile
                               </jet-dropdown-link>
 
+                              <!-- ADMIN can access the register option -->
                               <jet-dropdown-link v-if="$page.props.user != null && $page.props.user.type_id == 1"
                                                  :href="route('register')">
                                  Register

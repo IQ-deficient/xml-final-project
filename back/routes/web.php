@@ -29,6 +29,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
+    Route::get('/suppliers', function () {
+        return Inertia::render('TermsOfService');
+    })->name('suppliers');
+
     Route::get('/sales', function () {
         return Inertia::render('PrivacyPolicy');
     })->name('sales');

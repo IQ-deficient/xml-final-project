@@ -18,7 +18,6 @@ class CreateMtProductSuppliersTable extends Migration
             $table->unsignedBigInteger('product_id');
             $table->unsignedBigInteger('supplier_id');
             $table->integer('quantity');
-            $table->string('description');
             $table->boolean('is_active')->default(true);
             $table->timestamps();
 
