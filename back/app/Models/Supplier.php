@@ -7,5 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 
 class Supplier extends Model
 {
-    use HasFactory;
+//    use HasFactory;
+
+    protected $table = 'suppliers';
+
+    protected $fillable = [
+        'name',
+        'location',
+
+        'is_active',
+        'updated_at',
+        'created_at',
+    ];
+
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
+
 }

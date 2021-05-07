@@ -7,5 +7,22 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    use HasFactory;
+//    use HasFactory;
+
+    protected $table = 'products';
+
+    protected $fillable = [
+        'name',
+        'price',
+        'description',
+
+        'is_active',
+        'updated_at',
+        'created_at',
+    ];
+
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
+
 }

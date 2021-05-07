@@ -14,7 +14,7 @@ class MtProductSupplierController extends Controller
      */
     public function index()
     {
-        //
+        return MtProductSupplier::all();
     }
 
     /**
