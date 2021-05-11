@@ -24,6 +24,13 @@ class MtProductSupplierSeeder extends Seeder
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ],
             [
+                'product_id' => 1,
+                'supplier_id' => 2,
+                'quantity' => 3,
+                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            ],
+            [
                 'product_id' => 2,
                 'supplier_id' => 3,
                 'quantity' => 8,

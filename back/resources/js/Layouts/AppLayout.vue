@@ -17,7 +17,7 @@
 
                      <!-- Navigation Links -->
                      <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                        <jet-nav-link :href="route('dashboard')" :active="route().current('dashboard')">
+                        <jet-nav-link :href="route('products')" :active="route().current('products')">
                            Products
                         </jet-nav-link>
                         <jet-nav-link :href="route('suppliers')" :active="route().current('suppliers')">

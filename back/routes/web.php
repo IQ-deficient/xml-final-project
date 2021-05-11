@@ -36,4 +36,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/sales', function () {
         return Inertia::render('PrivacyPolicy');
     })->name('sales');
+
+    Route::get('/products', function () {
+        return Inertia::render('Products');
+    })->name('products');
+
 });

@@ -38,4 +38,39 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+    // REDIRECT ON NON-EXISTENT ROUTE
+    public function render($request, Throwable $e)
+    {
+        if ($this->isHttpException($e)) {
+            if ($e->getStatusCode() == 404)
+                return redirect()->guest('login');
+
+            if ($e->getStatusCode() == 500)
+                return redirect()->guest('login');
+        }
+        return parent::render($request, $e);
+    }
+//    {
+//        if ($this->isHttpException($e)) {
+//            switch ($e->getStatusCode()) {
+//                // not found
+//                case 404:
+//                    return redirect()->guest('login');
+//                    break;
+//
+//                // internal error
+//                case '500':
+//                    return redirect()->guest('dashboard');
+//                    break;
+//
+//                default:
+//                    return $this->renderHttpException($e);
+//                    break;
+//            }
+//        } else {
+//            return parent::render($request, $e);
+//        }
+//    }
+
 }
