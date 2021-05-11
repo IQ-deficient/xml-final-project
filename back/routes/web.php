@@ -24,6 +24,14 @@ Route::get('/', function () {
     ]);
 });
 
+//Route::get('{any?}', function () {
+//    return view('index');
+//})->where('any', '.*');
+
+//Route::inertia('/about', 'AboutComponent');
+
+//Inertia::share();
+
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');

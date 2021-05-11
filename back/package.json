@@ -17,6 +17,7 @@
         "@tailwindcss/typography": "^0.3.0",
         "@vue/compiler-sfc": "^3.0.5",
         "axios": "^0.21.1",
+        "eslint": "^4.19.1",
         "laravel-mix": "^6.0.6",
         "lodash": "^4.17.19",
         "postcss": "^8.1.14",
@@ -25,5 +26,12 @@
         "vue": "^3.0.5",
         "vue-loader": "^16.1.2",
         "webpack-livereload-plugin": "^1.2.0"
+    },
+    "dependencies": {
+        "eslint-plugin-vue": "^7.9.0",
+        "lodash.orderby": "^4.6.0",
+        "v-datatable-light": "^0.8.2",
+        "vue-simple-spinner": "^1.2.10",
+        "vue3-table-lite": "^1.0.5"
     }
 }

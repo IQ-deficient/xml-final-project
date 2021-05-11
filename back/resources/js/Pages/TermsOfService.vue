@@ -19,7 +19,7 @@
 
 <script>
 import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo'
-import AppLayout from "../Layouts/AppLayout";
+import AppLayout from "../Layouts/AppLayout"
 
 export default {
    props: ['terms'],
@@ -29,4 +29,5 @@ export default {
       JetAuthenticationCardLogo,
    },
 }
+
 </script>
