@@ -19,9 +19,9 @@
                    :total="table.totalRecordCount"
                    :sortable="table.sortable"
                    :messages="table.messages"
-                   @do-search="doSearch"
+                   @click="doSearch($event)"
                    @is-finished="tableLoadingFinish"
-                   @return-checked-row="updateCheckedRows"
+                   @return-checked-rows="updateCheckedRows"
                />
             </div>
          </div>
@@ -38,175 +38,130 @@ import {defineComponent, reactive} from "vue";
 export default defineComponent({
    name: "TermsOfService",
    data() {
-      return {}
+      return {
+         table: reactive({
+            isLoading: false,
+            isReSearch: false,
+            columns: [
+               {
+                  label: "Name",
+                  field: "name",
+                  width: "10%",
+                  sortable: true,
+                  isKey: false,
+                  display: function (row) {
+                     return (
+                         '<a href="#" data-id="' +
+                         row.user_id +
+                         '" class="is-rows-el name-btn">' +
+                         row.name +
+                         "</button>"
+                     );
+                  },
+               },
+               {
+                  label: "Price",
+                  field: "price",
+                  width: "5%",
+                  sortable: true,
+                  isKey: true,
+
+               },
+               {
+                  label: "Description",
+                  field: "description",
+                  width: "20%",
+                  sortable: true,
+               },
+               {
+                  label: "Active",
+                  field: "is_active",
+                  width: "5%",
+                  sortable: false,
+               },
+               {
+                  label: "",
+                  field: "quick",
+                  width: "5%",
+                  sortable: false,
+                  display: function (row) {
+                     return (
+                         '<button type="button" data-id="' +
+                         row.user_id +
+                         '" class="is-rows-el quick-btn">Button</button>'
+                     );
+                  },
+               },
+            ],
+            rows: [],
+            totalRecordCount: 20,
+            sortable: {
+               sort: "asc",
+            },
+            headerSort: [],
+            messages: {
+               pagingInfo: "Showing {0}-{1} of {2}",
+               pageSizeChangeLabel: "Row count:",
+               gotoPageLabel: "  Go to page:",
+               noDataAvailable: "No data",
+            }
+         })
+      }
    },
    props: ['terms'],
    components: {
       AppLayout,
       TableLite
    },
-   setup() {
-      const table = reactive({
-         isLoading: false,
-         isReSearch: false,
-         columns: [
-            {
-               label: "Name",
-               field: "name",
-               width: "15%",
-               sortable: true,
-               // isKey: true,
-            },
-            {
-               label: "Price",
-               field: "price",
-               width: "5%",
-               sortable: true,
-               display: function (row) {
-                  return (
-                      '<a href="#" data-id="' +
-                      row.product_id +
-                      '" class="is-rows-el name-btn">' +
-                      row.name +
-                      "</button>"
-                  );
-               },
-            },
-            {
-               label: "Description",
-               field: "description",
-               width: "20%",
-               sortable: true,
-            },
-            {
-               label: "Active",
-               field: "is_active",
-               width: "5%",
-               sortable: false,
-            },
-            {
-               label: "Operation",
-               field: "quick",
-               width: "5%",
-               display: function (row) {
-                  return (
-                      '<button type="button" data-id="' +
-                      row.user_id +
-                      '" class="is-rows-el quick-btn">Button</button>'
-                  );
-               },
-            },
-         ],
-         rows: sampleData1(0, 10),
-         totalRecordCount: 20,
-         sortable: {
-            order: "name",
-            sort: "asc",
-         },
-         messages: {
-            pagingInfo: "Showing {0}-{1} of {2}",
-            pageSizeChangeLabel: "Row count:",
-            gotoPageLabel: "  Go to page:",
-            noDataAvailable: "No data",
-         },
-      });
+   methods: {
+      loadTableData() {
+         this.table.rows = this.$inertia.page.props.products
+         this.table.totalRecordCount = this.$inertia.page.props.products.length
+      },
+      doSearch(event) {
+         let headerName = event.srcElement.innerText.toLowerCase();
 
-      const doSearch = (offset, limit, order, sort) => {
-         table.isLoading = true;
-         setTimeout(() => {
-            table.isReSearch = offset == undefined ? true : false;
-            if (offset >= 10 || limit >= 20) {
-               limit = 20;
-            }
-            if (sort == "asc") {
-               table.rows = sampleData1(offset, limit);
-            } else {
-               table.rows = sampleData2(offset, limit);
-            }
-            table.totalRecordCount = 20;
-            table.sortable.order = order;
-            table.sortable.sort = sort;
-         }, 600);
-      };
+         if (this.table.headerSort[headerName] === 'asc') {
+            this.table.rows = this.table.rows.sort(function (row1, row2) {
+               if (typeof row1[headerName] == 'number') {
+                  return row2[headerName] - row1[headerName]
+               } else if (typeof row1[headerName] == 'string') {
+                  return -1;
+               }
+            })
+            this.table.headerSort[headerName] = 'desc'
+         } else {
+            this.table.rows = this.table.rows.sort(function (row1, row2) {
+               if (typeof row1[headerName] == 'number') {
+                  return row1[headerName] - row2[headerName]
+               } else if (typeof row1[headerName] == 'string') {
+                  return 1;
+               }
+            })
+            this.table.headerSort[headerName] = 'asc'
+         }
+         console.log(this.table.headerSort[headerName])
 
-      /**
-       * @param Collection elements 靜態元件
-       */
-      const tableLoadingFinish = (elements) => {
-         table.isLoading = false;
-         Array.prototype.forEach.call(elements, function (element) {
-            if (element.classList.contains("name-btn")) {
-               element.addEventListener("click", function () {
-                  console.log(this.dataset.id + " name-btn click!!");
-               });
-            }
-            if (element.classList.contains("quick-btn")) {
-               element.addEventListener("click", function () {
-                  console.log(this.dataset.id + " quick-btn click!!");
-               });
-            }
-         });
-      };
+         // purple arrow configuration
+         this.table.sortable.order = headerName;
+         this.table.sortable.sort = this.table.headerSort[headerName];
 
-      const updateCheckedRows = (rowsKey) => {
-         console.log(rowsKey);
-      };
-
-      return {
-         table,
-         doSearch,
-         tableLoadingFinish,
-         updateCheckedRows,
-      };
+      },
+      tableLoadingFinish(elements) {
+         this.table.isLoading = false;
+      },
+      updateCheckedRows(rowsKey) {
+         // console.log(rowsKey)
+      }
    },
+   created() {
+      this.loadTableData()
+      this.table.headerSort['name'] = 'asc'
+      this.table.headerSort['price'] = 'asc'
+      this.table.headerSort['description'] = 'asc'
+   }
 })
 
-const loadTableData = (offst, limit) => {
-   axios.get().then(response => {
-      offst = offst + 1;
-      let data = [];
-      this.tableData = response.data
-      for (let i = offst; i <= limit; i++) {
-         data.push({
-            name: response.data.name,
-            price: response.data.price,
-            description: response.data.description,
-            is_active: response.data.is_active,
-         });
-      }
-      return data;
-   }).catch(error => {
-      console.log(error)
-   })
-};
-
-const sampleData1 = (offst, limit) => {
-   offst = offst + 1;
-   let data = [];
-   for (let i = offst; i <= limit; i++) {
-      data.push({
-         // id: i,
-         name: "name " + i,
-         price: "1"+ i,
-         description: "desc " +1,
-         is_active: true,
-         // email: "test" + i + "@example.com",
-      });
-   }
-   return data;
-};
-
-const sampleData2 = (offst, limit) => {
-   let data = [];
-   for (let i = limit; i > offst; i--) {
-      data.push({
-         id: i,
-         name: "TEST" + i,
-         email: "test" + i + "@example.com",
-      });
-   }
-   return data;
-};
 
 </script>
 <style>

@@ -4,17 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        return Product::all();
+        $products = Product::all();
+
+        return Inertia::render('Products', [
+            'products' => $products,
+        ]);
     }
 
     /**
@@ -46,7 +46,9 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        //
+        return Inertia::render('Product/Show', [
+            'product' => $product->only('id', 'name', 'price', 'description', 'is_active'),
+        ]);
     }
 
     /**

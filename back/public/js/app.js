@@ -17954,8 +17954,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue3_table_lite__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue3-table-lite */ "./node_modules/vue3-table-lite/index.js");
 /* harmony import */ var vue3_table_lite__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue3_table_lite__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
-var _this = undefined;
-
 
 
 
@@ -17963,170 +17961,110 @@ var _this = undefined;
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,vue__WEBPACK_IMPORTED_MODULE_2__.defineComponent)({
   name: "TermsOfService",
   data: function data() {
-    return {};
+    return {
+      table: (0,vue__WEBPACK_IMPORTED_MODULE_2__.reactive)({
+        isLoading: false,
+        isReSearch: false,
+        columns: [{
+          label: "Name",
+          field: "name",
+          width: "10%",
+          sortable: true,
+          isKey: false,
+          display: function display(row) {
+            return '<a href="#" data-id="' + row.user_id + '" class="is-rows-el name-btn">' + row.name + "</button>";
+          }
+        }, {
+          label: "Price",
+          field: "price",
+          width: "5%",
+          sortable: true,
+          isKey: true
+        }, {
+          label: "Description",
+          field: "description",
+          width: "20%",
+          sortable: true
+        }, {
+          label: "Active",
+          field: "is_active",
+          width: "5%",
+          sortable: false
+        }, {
+          label: "",
+          field: "quick",
+          width: "5%",
+          sortable: false,
+          display: function display(row) {
+            return '<button type="button" data-id="' + row.user_id + '" class="is-rows-el quick-btn">Button</button>';
+          }
+        }],
+        rows: [],
+        totalRecordCount: 20,
+        sortable: {
+          sort: "asc"
+        },
+        headerSort: [],
+        messages: {
+          pagingInfo: "Showing {0}-{1} of {2}",
+          pageSizeChangeLabel: "Row count:",
+          gotoPageLabel: "  Go to page:",
+          noDataAvailable: "No data"
+        }
+      })
+    };
   },
   props: ['terms'],
   components: {
     AppLayout: _Layouts_AppLayout__WEBPACK_IMPORTED_MODULE_0__.default,
     TableLite: (vue3_table_lite__WEBPACK_IMPORTED_MODULE_1___default())
   },
-  setup: function setup() {
-    var table = (0,vue__WEBPACK_IMPORTED_MODULE_2__.reactive)({
-      isLoading: false,
-      isReSearch: false,
-      columns: [{
-        label: "Name",
-        field: "name",
-        width: "15%",
-        sortable: true // isKey: true,
+  methods: {
+    loadTableData: function loadTableData() {
+      this.table.rows = this.$inertia.page.props.products;
+      this.table.totalRecordCount = this.$inertia.page.props.products.length;
+    },
+    doSearch: function doSearch(event) {
+      var headerName = event.srcElement.innerText.toLowerCase();
 
-      }, {
-        label: "Price",
-        field: "price",
-        width: "5%",
-        sortable: true,
-        display: function display(row) {
-          return '<a href="#" data-id="' + row.product_id + '" class="is-rows-el name-btn">' + row.name + "</button>";
-        }
-      }, {
-        label: "Description",
-        field: "description",
-        width: "20%",
-        sortable: true
-      }, {
-        label: "Active",
-        field: "is_active",
-        width: "5%",
-        sortable: false
-      }, {
-        label: "Operation",
-        field: "quick",
-        width: "5%",
-        display: function display(row) {
-          return '<button type="button" data-id="' + row.user_id + '" class="is-rows-el quick-btn">Button</button>';
-        }
-      }],
-      rows: sampleData1(0, 10),
-      totalRecordCount: 20,
-      sortable: {
-        order: "name",
-        sort: "asc"
-      },
-      messages: {
-        pagingInfo: "Showing {0}-{1} of {2}",
-        pageSizeChangeLabel: "Row count:",
-        gotoPageLabel: "  Go to page:",
-        noDataAvailable: "No data"
+      if (this.table.headerSort[headerName] === 'asc') {
+        this.table.rows = this.table.rows.sort(function (row1, row2) {
+          if (typeof row1[headerName] == 'number') {
+            return row2[headerName] - row1[headerName];
+          } else if (typeof row1[headerName] == 'string') {
+            return -1;
+          }
+        });
+        this.table.headerSort[headerName] = 'desc';
+      } else {
+        this.table.rows = this.table.rows.sort(function (row1, row2) {
+          if (typeof row1[headerName] == 'number') {
+            return row1[headerName] - row2[headerName];
+          } else if (typeof row1[headerName] == 'string') {
+            return 1;
+          }
+        });
+        this.table.headerSort[headerName] = 'asc';
       }
-    });
 
-    var doSearch = function doSearch(offset, limit, order, sort) {
-      table.isLoading = true;
-      setTimeout(function () {
-        table.isReSearch = offset == undefined ? true : false;
+      console.log(this.table.headerSort[headerName]); // purple arrow configuration
 
-        if (offset >= 10 || limit >= 20) {
-          limit = 20;
-        }
-
-        if (sort == "asc") {
-          table.rows = sampleData1(offset, limit);
-        } else {
-          table.rows = sampleData2(offset, limit);
-        }
-
-        table.totalRecordCount = 20;
-        table.sortable.order = order;
-        table.sortable.sort = sort;
-      }, 600);
-    };
-    /**
-     * @param Collection elements 靜態元件
-     */
-
-
-    var tableLoadingFinish = function tableLoadingFinish(elements) {
-      table.isLoading = false;
-      Array.prototype.forEach.call(elements, function (element) {
-        if (element.classList.contains("name-btn")) {
-          element.addEventListener("click", function () {
-            console.log(this.dataset.id + " name-btn click!!");
-          });
-        }
-
-        if (element.classList.contains("quick-btn")) {
-          element.addEventListener("click", function () {
-            console.log(this.dataset.id + " quick-btn click!!");
-          });
-        }
-      });
-    };
-
-    var updateCheckedRows = function updateCheckedRows(rowsKey) {
-      console.log(rowsKey);
-    };
-
-    return {
-      table: table,
-      doSearch: doSearch,
-      tableLoadingFinish: tableLoadingFinish,
-      updateCheckedRows: updateCheckedRows
-    };
+      this.table.sortable.order = headerName;
+      this.table.sortable.sort = this.table.headerSort[headerName];
+    },
+    tableLoadingFinish: function tableLoadingFinish(elements) {
+      this.table.isLoading = false;
+    },
+    updateCheckedRows: function updateCheckedRows(rowsKey) {// console.log(rowsKey)
+    }
+  },
+  created: function created() {
+    this.loadTableData();
+    this.table.headerSort['name'] = 'asc';
+    this.table.headerSort['price'] = 'asc';
+    this.table.headerSort['description'] = 'asc';
   }
 }));
-
-var loadTableData = function loadTableData(offst, limit) {
-  axios.get().then(function (response) {
-    offst = offst + 1;
-    var data = [];
-    _this.tableData = response.data;
-
-    for (var i = offst; i <= limit; i++) {
-      data.push({
-        name: response.data.name,
-        price: response.data.price,
-        description: response.data.description,
-        is_active: response.data.is_active
-      });
-    }
-
-    return data;
-  })["catch"](function (error) {
-    console.log(error);
-  });
-};
-
-var sampleData1 = function sampleData1(offst, limit) {
-  offst = offst + 1;
-  var data = [];
-
-  for (var i = offst; i <= limit; i++) {
-    data.push({
-      // id: i,
-      name: "name " + i,
-      price: "1" + i,
-      description: "desc " + 1,
-      is_active: true // email: "test" + i + "@example.com",
-
-    });
-  }
-
-  return data;
-};
-
-var sampleData2 = function sampleData2(offst, limit) {
-  var data = [];
-
-  for (var i = limit; i > offst; i--) {
-    data.push({
-      id: i,
-      name: "TEST" + i,
-      email: "test" + i + "@example.com"
-    });
-  }
-
-  return data;
-};
 
 /***/ }),
 
@@ -22010,12 +21948,14 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         total: _ctx.table.totalRecordCount,
         sortable: _ctx.table.sortable,
         messages: _ctx.table.messages,
-        onDoSearch: _ctx.doSearch,
+        onClick: _cache[1] || (_cache[1] = function ($event) {
+          return _ctx.doSearch($event);
+        }),
         onIsFinished: _ctx.tableLoadingFinish,
-        onReturnCheckedRow: _ctx.updateCheckedRows
+        onReturnCheckedRows: _ctx.updateCheckedRows
       }, null, 8
       /* PROPS */
-      , ["is-loading", "is-re-search", "columns", "rows", "total", "sortable", "messages", "onDoSearch", "onIsFinished", "onReturnCheckedRow"])])])])];
+      , ["is-loading", "is-re-search", "columns", "rows", "total", "sortable", "messages", "onIsFinished", "onReturnCheckedRows"])])])])];
     }),
     _: 1
     /* STABLE */

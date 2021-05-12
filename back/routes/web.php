@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProductController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -45,8 +46,13 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         return Inertia::render('PrivacyPolicy');
     })->name('sales');
 
-    Route::get('/products', function () {
-        return Inertia::render('Products');
-    })->name('products');
+    Route::get('/products',
+        [ProductController::class, 'index']
+    )->name('products');
 
+//    Route::get('/something', function () {
+//        return Inertia::render('Something', [
+//            'smth' => 'received data through prop',
+//        ]);
+//    });
 });
