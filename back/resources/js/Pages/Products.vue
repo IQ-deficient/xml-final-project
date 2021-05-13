@@ -13,7 +13,8 @@
                <div style="padding: 0.5em; justify-content: end">
                   <button-lite class="btn-primary" @click="importExcel()" style="margin-right: 0.5em">Import
                   </button-lite>
-                  <input v-model="filter" v-on:keyup.enter="loadTableData()" placeholder="Search..." @click="debugging(filteredRows)"
+                  <input v-model="filter" v-on:keyup.enter="loadTableData()" placeholder="Search..."
+                         @click="debugging(filteredRows)"
                          class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200
                           focus:ring-opacity-10 rounded-md shadow-sm px-4 py-1"/>
                   <button-lite @click="exportToPdf()" style="float: right">Export PDF</button-lite>
@@ -142,11 +143,12 @@ export default defineComponent({
       exportToPdf() {
          console.log('PDF')
       },
+      // fill the table rows from inertia page prop rendered in page controller
       loadTableData() {
-         // fill the table rows from inertia page prop rendered in page controller
          this.table.rows = this.$inertia.page.props.products
          this.table.totalRecordCount = this.$inertia.page.props.products.length
       },
+      // cancerous column sorting
       doSearch(event) {
          let headerName = event.srcElement.innerText.toLowerCase();
 
@@ -193,13 +195,14 @@ export default defineComponent({
       this.table.headerSort['description'] = 'asc'
    },
    computed: {
-      // variable that sets table data by search string for item name
+      // variable that sets table data by search string for item name and description
       filteredRows() {
          return this.table.rows.filter(row => {
             const searchName = row.name.toString().toLowerCase();
+            const searchDesc = row.description.toString().toLowerCase();
             const searchTerm = this.filter.toLowerCase();
 
-            return searchName.includes(searchTerm);
+            return searchName.includes(searchTerm) || searchDesc.includes(searchTerm);
          });
       },
    }

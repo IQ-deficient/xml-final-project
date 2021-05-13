@@ -18039,11 +18039,12 @@ __webpack_require__.r(__webpack_exports__);
     exportToPdf: function exportToPdf() {
       console.log('PDF');
     },
+    // fill the table rows from inertia page prop rendered in page controller
     loadTableData: function loadTableData() {
-      // fill the table rows from inertia page prop rendered in page controller
       this.table.rows = this.$inertia.page.props.products;
       this.table.totalRecordCount = this.$inertia.page.props.products.length;
     },
+    // cancerous column sorting
     doSearch: function doSearch(event) {
       var headerName = event.srcElement.innerText.toLowerCase();
 
@@ -18088,16 +18089,17 @@ __webpack_require__.r(__webpack_exports__);
     this.table.headerSort['description'] = 'asc';
   },
   computed: {
-    // variable that sets table data by search string for item name
+    // variable that sets table data by search string for item name and description
     filteredRows: function filteredRows() {
       var _this = this;
 
       return this.table.rows.filter(function (row) {
         var searchName = row.name.toString().toLowerCase();
+        var searchDesc = row.description.toString().toLowerCase();
 
         var searchTerm = _this.filter.toLowerCase();
 
-        return searchName.includes(searchTerm);
+        return searchName.includes(searchTerm) || searchDesc.includes(searchTerm);
       });
     }
   }
