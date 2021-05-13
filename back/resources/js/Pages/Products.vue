@@ -61,7 +61,7 @@ export default defineComponent({
                {
                   label: "Name",
                   field: "name",
-                  width: "10%",
+                  width: "15%",
                   sortable: true,
                   isKey: true,
                   display: function (row) {
@@ -85,23 +85,23 @@ export default defineComponent({
                {
                   label: "Description",
                   field: "description",
-                  width: "20%",
+                  width: "25%",
                   sortable: true,
                },
                {
-                  label: "Active",
+                  label: "In Stock",
                   field: "is_active",
                   width: "5%",
                   sortable: false,
                },
                {
-                  label: "",
+                  label: "Actions",
                   field: "quick",
-                  width: "5%",
+                  width: "3%",
                   sortable: false,
                   display: function (row) {
                      return (
-                         '<button type="button" data-id="' +
+                         '<button @click="" type="button" data-id="' +
                          row.user_id +
                          '" class="is-rows-el quick-btn">Sell</button>'
                      );
