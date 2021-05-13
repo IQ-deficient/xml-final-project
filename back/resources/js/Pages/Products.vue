@@ -10,6 +10,13 @@
          <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                <!--               <welcome/>-->
+               <div style="padding: 0.5em; justify-content: end">
+                  <button-lite style="margin-right: 0.5em">Import</button-lite>
+
+                  <button-lite @click="exportToPdf()" style="float: right">Export PDF</button-lite>
+                  <button-lite @click="exportToJson()" style="float: right; margin-right: 0.5em">Export JSON</button-lite>
+                  <button-lite @click="exportToXml()" style="float: right; margin-right: 0.5em">Export XML</button-lite>
+               </div>
                <table-lite
                    :has-checkbox="false"
                    :is-loading="table.isLoading"
@@ -34,6 +41,7 @@ import AppLayout from '../Layouts/AppLayout'
 import Welcome from '../Layouts/AppLayout'
 import TableLite from "vue3-table-lite";
 import {defineComponent, reactive} from "vue";
+import ButtonLite from '../Jetstream/Button'
 
 export default defineComponent({
    name: "TermsOfService",
@@ -48,7 +56,7 @@ export default defineComponent({
                   field: "name",
                   width: "10%",
                   sortable: true,
-                  isKey: false,
+                  isKey: true,
                   display: function (row) {
                      return (
                          '<a href="#" data-id="' +
@@ -88,7 +96,7 @@ export default defineComponent({
                      return (
                          '<button type="button" data-id="' +
                          row.user_id +
-                         '" class="is-rows-el quick-btn">Button</button>'
+                         '" class="is-rows-el quick-btn">Sell</button>'
                      );
                   },
                },
@@ -111,9 +119,19 @@ export default defineComponent({
    props: ['terms'],
    components: {
       AppLayout,
-      TableLite
+      TableLite,
+      ButtonLite
    },
    methods: {
+      exportToXml() {
+
+      },
+      exportToJson() {
+
+      },
+      ExportToPdf() {
+
+      },
       loadTableData() {
          this.table.rows = this.$inertia.page.props.products
          this.table.totalRecordCount = this.$inertia.page.props.products.length
