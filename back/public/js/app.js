@@ -17955,6 +17955,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue3_table_lite__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue3_table_lite__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 /* harmony import */ var _Jetstream_Button__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Jetstream/Button */ "./resources/js/Jetstream/Button.vue");
+/* harmony import */ var _Jetstream_Input__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Jetstream/Input */ "./resources/js/Jetstream/Input.vue");
+
 
 
 
@@ -17964,6 +17966,7 @@ __webpack_require__.r(__webpack_exports__);
   name: "TermsOfService",
   data: function data() {
     return {
+      filter: '',
       table: (0,vue__WEBPACK_IMPORTED_MODULE_2__.reactive)({
         isLoading: false,
         isReSearch: false,
@@ -18020,13 +18023,24 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     AppLayout: _Layouts_AppLayout__WEBPACK_IMPORTED_MODULE_0__.default,
     TableLite: (vue3_table_lite__WEBPACK_IMPORTED_MODULE_1___default()),
-    ButtonLite: _Jetstream_Button__WEBPACK_IMPORTED_MODULE_3__.default
+    ButtonLite: _Jetstream_Button__WEBPACK_IMPORTED_MODULE_3__.default,
+    InputLite: _Jetstream_Input__WEBPACK_IMPORTED_MODULE_4__.default
   },
   methods: {
-    exportToXml: function exportToXml() {},
-    exportToJson: function exportToJson() {},
-    ExportToPdf: function ExportToPdf() {},
+    importExcel: function importExcel() {
+      console.log("IMPORT");
+    },
+    exportToXml: function exportToXml() {
+      console.log('XML');
+    },
+    exportToJson: function exportToJson() {
+      console.log('JSON');
+    },
+    exportToPdf: function exportToPdf() {
+      console.log('PDF');
+    },
     loadTableData: function loadTableData() {
+      // fill the table rows from inertia page prop rendered in page controller
       this.table.rows = this.$inertia.page.props.products;
       this.table.totalRecordCount = this.$inertia.page.props.products.length;
     },
@@ -18062,6 +18076,9 @@ __webpack_require__.r(__webpack_exports__);
       this.table.isLoading = false;
     },
     updateCheckedRows: function updateCheckedRows(rowsKey) {// console.log(rowsKey)
+    },
+    debugging: function debugging(something) {
+      console.log(something);
     }
   },
   created: function created() {
@@ -18069,6 +18086,20 @@ __webpack_require__.r(__webpack_exports__);
     this.table.headerSort['name'] = 'asc';
     this.table.headerSort['price'] = 'asc';
     this.table.headerSort['description'] = 'asc';
+  },
+  computed: {
+    // variable that sets table data by search string for item name
+    filteredRows: function filteredRows() {
+      var _this = this;
+
+      return this.table.rows.filter(function (row) {
+        var searchName = row.name.toString().toLowerCase();
+
+        var searchTerm = _this.filter.toLowerCase();
+
+        return searchName.includes(searchTerm);
+      });
+    }
   }
 }));
 
@@ -18927,7 +18958,7 @@ __webpack_require__.r(__webpack_exports__);
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)("button", {
     type: $props.type,
-    "class": "inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent\r\n            rounded-md font-semibold text-xs text-white uppercase tracking-widest\r\n             hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900\r\n              focus:ring focus:ring-gray-300 disabled:opacity-25 transition"
+    "class": "inline-flex items-center px-4 py-2 bg-indigo-500 border border-transparent\r\n            rounded-md font-semibold text-xs text-white uppercase tracking-widest\r\n             hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900\r\n              focus:ring focus:ring-gray-300 disabled:opacity-25 transition"
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.renderSlot)(_ctx.$slots, "default")], 8
   /* PROPS */
   , ["type"]);
@@ -21945,11 +21976,11 @@ var _hoisted_4 = {
   }
 };
 
-var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Import");
+var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Import ");
 
 var _hoisted_6 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Export PDF");
 
-var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Export JSON");
+var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Export JSON ");
 
 var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Export XML");
 
@@ -21963,6 +21994,10 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_app_layout, null, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("      <template #header>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("         <h2 class=\"font-semibold text-xl text-gray-800 leading-tight\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            IN PROGRESS"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("         </h2>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("      </template>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("               <welcome/>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_button_lite, {
+        "class": "btn-primary",
+        onClick: _cache[1] || (_cache[1] = function ($event) {
+          return _ctx.importExcel();
+        }),
         style: {
           "margin-right": "0.5em"
         }
@@ -21973,8 +22008,22 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         _: 1
         /* STABLE */
 
-      }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_button_lite, {
-        onClick: _cache[1] || (_cache[1] = function ($event) {
+      }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("input", {
+        "onUpdate:modelValue": _cache[2] || (_cache[2] = function ($event) {
+          return _ctx.filter = $event;
+        }),
+        onKeyup: _cache[3] || (_cache[3] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withKeys)(function ($event) {
+          return _ctx.loadTableData();
+        }, ["enter"])),
+        placeholder: "Search...",
+        onClick: _cache[4] || (_cache[4] = function ($event) {
+          return _ctx.debugging(_ctx.filteredRows);
+        }),
+        "class": "border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200\r\n                          focus:ring-opacity-10 rounded-md shadow-sm px-4 py-1"
+      }, null, 544
+      /* HYDRATE_EVENTS, NEED_PATCH */
+      ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, _ctx.filter]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_button_lite, {
+        onClick: _cache[5] || (_cache[5] = function ($event) {
           return _ctx.exportToPdf();
         }),
         style: {
@@ -21988,7 +22037,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         /* STABLE */
 
       }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_button_lite, {
-        onClick: _cache[2] || (_cache[2] = function ($event) {
+        onClick: _cache[6] || (_cache[6] = function ($event) {
           return _ctx.exportToJson();
         }),
         style: {
@@ -22003,7 +22052,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         /* STABLE */
 
       }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_button_lite, {
-        onClick: _cache[3] || (_cache[3] = function ($event) {
+        onClick: _cache[7] || (_cache[7] = function ($event) {
           return _ctx.exportToXml();
         }),
         style: {
@@ -22022,11 +22071,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         "is-loading": _ctx.table.isLoading,
         "is-re-search": _ctx.table.isReSearch,
         columns: _ctx.table.columns,
-        rows: _ctx.table.rows,
+        rows: _ctx.filteredRows,
         total: _ctx.table.totalRecordCount,
         sortable: _ctx.table.sortable,
         messages: _ctx.table.messages,
-        onClick: _cache[4] || (_cache[4] = function ($event) {
+        onClick: _cache[8] || (_cache[8] = function ($event) {
           return _ctx.doSearch($event);
         }),
         onIsFinished: _ctx.tableLoadingFinish,

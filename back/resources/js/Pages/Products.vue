@@ -11,10 +11,14 @@
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                <!--               <welcome/>-->
                <div style="padding: 0.5em; justify-content: end">
-                  <button-lite style="margin-right: 0.5em">Import</button-lite>
-
+                  <button-lite class="btn-primary" @click="importExcel()" style="margin-right: 0.5em">Import
+                  </button-lite>
+                  <input v-model="filter" v-on:keyup.enter="loadTableData()" placeholder="Search..." @click="debugging(filteredRows)"
+                         class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200
+                          focus:ring-opacity-10 rounded-md shadow-sm px-4 py-1"/>
                   <button-lite @click="exportToPdf()" style="float: right">Export PDF</button-lite>
-                  <button-lite @click="exportToJson()" style="float: right; margin-right: 0.5em">Export JSON</button-lite>
+                  <button-lite @click="exportToJson()" style="float: right; margin-right: 0.5em">Export JSON
+                  </button-lite>
                   <button-lite @click="exportToXml()" style="float: right; margin-right: 0.5em">Export XML</button-lite>
                </div>
                <table-lite
@@ -22,7 +26,7 @@
                    :is-loading="table.isLoading"
                    :is-re-search="table.isReSearch"
                    :columns="table.columns"
-                   :rows="table.rows"
+                   :rows="filteredRows"
                    :total="table.totalRecordCount"
                    :sortable="table.sortable"
                    :messages="table.messages"
@@ -42,11 +46,13 @@ import Welcome from '../Layouts/AppLayout'
 import TableLite from "vue3-table-lite";
 import {defineComponent, reactive} from "vue";
 import ButtonLite from '../Jetstream/Button'
+import InputLite from '../Jetstream/Input'
 
 export default defineComponent({
    name: "TermsOfService",
    data() {
       return {
+         filter: '',
          table: reactive({
             isLoading: false,
             isReSearch: false,
@@ -120,19 +126,24 @@ export default defineComponent({
    components: {
       AppLayout,
       TableLite,
-      ButtonLite
+      ButtonLite,
+      InputLite
    },
    methods: {
+      importExcel() {
+         console.log("IMPORT")
+      },
       exportToXml() {
-
+         console.log('XML')
       },
       exportToJson() {
-
+         console.log('JSON')
       },
-      ExportToPdf() {
-
+      exportToPdf() {
+         console.log('PDF')
       },
       loadTableData() {
+         // fill the table rows from inertia page prop rendered in page controller
          this.table.rows = this.$inertia.page.props.products
          this.table.totalRecordCount = this.$inertia.page.props.products.length
       },
@@ -170,6 +181,9 @@ export default defineComponent({
       },
       updateCheckedRows(rowsKey) {
          // console.log(rowsKey)
+      },
+      debugging(something) {
+         console.log(something)
       }
    },
    created() {
@@ -177,6 +191,17 @@ export default defineComponent({
       this.table.headerSort['name'] = 'asc'
       this.table.headerSort['price'] = 'asc'
       this.table.headerSort['description'] = 'asc'
+   },
+   computed: {
+      // variable that sets table data by search string for item name
+      filteredRows() {
+         return this.table.rows.filter(row => {
+            const searchName = row.name.toString().toLowerCase();
+            const searchTerm = this.filter.toLowerCase();
+
+            return searchName.includes(searchTerm);
+         });
+      },
    }
 })
 
