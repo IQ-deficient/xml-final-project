@@ -11,12 +11,12 @@
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                <!--               <welcome/>-->
                <div style="padding: 0.5em; justify-content: end">
-                  <button-lite class="btn-primary" @click="importExcel()" style="margin-right: 0.5em">Import
-                  </button-lite>
+                  <button-lite @click="importExcel()" style="margin-right: 0.5em">Import</button-lite>
                   <input v-model="filter" v-on:keyup.enter="loadTableData()" placeholder="Search..."
-                         @click="debugging(filteredRows)"
                          class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200
-                          focus:ring-opacity-10 rounded-md shadow-sm px-4 py-1"/>
+                          focus:ring-opacity-10 rounded-md shadow-sm px-4 py-2 inline-flex items-center
+                           border border-transparent font-semibold text-sm tracking-widest active:bg-gray-900
+                            focus:outline-none disabled:opacity-25 transition" style="padding-top: 8px"/>
                   <button-lite @click="exportToPdf()" style="float: right">Export PDF</button-lite>
                   <button-lite @click="exportToJson()" style="float: right; margin-right: 0.5em">Export JSON
                   </button-lite>
@@ -89,24 +89,25 @@ export default defineComponent({
                   sortable: true,
                },
                {
-                  label: "In Stock",
+                  // in_stock?
+                  label: "Active",
                   field: "is_active",
                   width: "5%",
                   sortable: false,
                },
-               {
-                  label: "Actions",
-                  field: "quick",
-                  width: "3%",
-                  sortable: false,
-                  display: function (row) {
-                     return (
-                         '<button @click="" type="button" data-id="' +
-                         row.user_id +
-                         '" class="is-rows-el quick-btn">Sell</button>'
-                     );
-                  },
-               },
+               // {
+               //    label: "Actions",
+               //    field: "quick",
+               //    width: "3%",
+               //    sortable: false,
+               //    display: function (row) {
+               //       return (
+               //           '<button @click="" type="button" data-id="' +
+               //           row.user_id +
+               //           '" class="is-rows-el quick-btn">Sell</button>'
+               //       );
+               //    },
+               // },
             ],
             rows: [],
             totalRecordCount: 20,
@@ -128,7 +129,7 @@ export default defineComponent({
       AppLayout,
       TableLite,
       ButtonLite,
-      InputLite
+      InputLite,
    },
    methods: {
       importExcel() {
@@ -171,7 +172,7 @@ export default defineComponent({
             })
             this.table.headerSort[headerName] = 'asc'
          }
-         console.log(this.table.headerSort[headerName])
+         // console.log(this.table.headerSort[headerName])
 
          // purple arrow configuration
          this.table.sortable.order = headerName;
