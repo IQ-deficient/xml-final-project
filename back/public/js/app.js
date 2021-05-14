@@ -17991,19 +17991,25 @@ __webpack_require__.r(__webpack_exports__);
           width: "25%",
           sortable: true
         }, {
-          label: "In Stock",
+          // in_stock?
+          label: "Active",
           field: "is_active",
           width: "5%",
           sortable: false
-        }, {
-          label: "Actions",
-          field: "quick",
-          width: "3%",
-          sortable: false,
-          display: function display(row) {
-            return '<button @click="" type="button" data-id="' + row.user_id + '" class="is-rows-el quick-btn">Sell</button>';
-          }
-        }],
+        } // {
+        //    label: "Actions",
+        //    field: "quick",
+        //    width: "3%",
+        //    sortable: false,
+        //    display: function (row) {
+        //       return (
+        //           '<button @click="" type="button" data-id="' +
+        //           row.user_id +
+        //           '" class="is-rows-el quick-btn">Sell</button>'
+        //       );
+        //    },
+        // },
+        ],
         rows: [],
         totalRecordCount: 20,
         sortable: {
@@ -18066,9 +18072,9 @@ __webpack_require__.r(__webpack_exports__);
           }
         });
         this.table.headerSort[headerName] = 'asc';
-      }
+      } // console.log(this.table.headerSort[headerName])
+      // purple arrow configuration
 
-      console.log(this.table.headerSort[headerName]); // purple arrow configuration
 
       this.table.sortable.order = headerName;
       this.table.sortable.sort = this.table.headerSort[headerName];
@@ -18960,7 +18966,7 @@ __webpack_require__.r(__webpack_exports__);
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)("button", {
     type: $props.type,
-    "class": "inline-flex items-center px-4 py-2 bg-indigo-500 border border-transparent\r\n            rounded-md font-semibold text-xs text-white uppercase tracking-widest\r\n             hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900\r\n              focus:ring focus:ring-gray-300 disabled:opacity-25 transition"
+    "class": "inline-flex items-center px-4 py-2 bg-indigo-500 border border-transparent\r\n            rounded-md font-semibold text-sm text-white uppercase tracking-widest\r\n             hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900\r\n              focus:ring focus:ring-gray-300 disabled:opacity-25 transition"
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.renderSlot)(_ctx.$slots, "default")], 8
   /* PROPS */
   , ["type"]);
@@ -21978,7 +21984,7 @@ var _hoisted_4 = {
   }
 };
 
-var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Import ");
+var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Import");
 
 var _hoisted_6 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Export PDF");
 
@@ -21996,7 +22002,6 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_app_layout, null, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("      <template #header>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("         <h2 class=\"font-semibold text-xl text-gray-800 leading-tight\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            IN PROGRESS"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("         </h2>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("      </template>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("               <welcome/>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_button_lite, {
-        "class": "btn-primary",
         onClick: _cache[1] || (_cache[1] = function ($event) {
           return _ctx.importExcel();
         }),
@@ -22018,14 +22023,14 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           return _ctx.loadTableData();
         }, ["enter"])),
         placeholder: "Search...",
-        onClick: _cache[4] || (_cache[4] = function ($event) {
-          return _ctx.debugging(_ctx.filteredRows);
-        }),
-        "class": "border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200\r\n                          focus:ring-opacity-10 rounded-md shadow-sm px-4 py-1"
+        "class": "border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200\r\n                          focus:ring-opacity-10 rounded-md shadow-sm px-4 py-2 inline-flex items-center\r\n                           border border-transparent font-semibold text-sm tracking-widest active:bg-gray-900\r\n                            focus:outline-none disabled:opacity-25 transition",
+        style: {
+          "padding-top": "8px"
+        }
       }, null, 544
       /* HYDRATE_EVENTS, NEED_PATCH */
       ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, _ctx.filter]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_button_lite, {
-        onClick: _cache[5] || (_cache[5] = function ($event) {
+        onClick: _cache[4] || (_cache[4] = function ($event) {
           return _ctx.exportToPdf();
         }),
         style: {
@@ -22039,7 +22044,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         /* STABLE */
 
       }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_button_lite, {
-        onClick: _cache[6] || (_cache[6] = function ($event) {
+        onClick: _cache[5] || (_cache[5] = function ($event) {
           return _ctx.exportToJson();
         }),
         style: {
@@ -22054,7 +22059,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         /* STABLE */
 
       }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_button_lite, {
-        onClick: _cache[7] || (_cache[7] = function ($event) {
+        onClick: _cache[6] || (_cache[6] = function ($event) {
           return _ctx.exportToXml();
         }),
         style: {
@@ -22077,7 +22082,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         total: _ctx.table.totalRecordCount,
         sortable: _ctx.table.sortable,
         messages: _ctx.table.messages,
-        onClick: _cache[8] || (_cache[8] = function ($event) {
+        onClick: _cache[7] || (_cache[7] = function ($event) {
           return _ctx.doSearch($event);
         }),
         onIsFinished: _ctx.tableLoadingFinish,
