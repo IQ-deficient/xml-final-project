@@ -10,11 +10,13 @@
     "watch-poll": "mix watch -- --watch-options-poll=1000"
   },
   "dependencies": {
+    "@suadelabs/vue3-multiselect": "^1.0.0",
     "bootstrap": "^5.0.1",
     "bootstrap-vue": "^2.21.2",
     "eslint-plugin-vue": "^7.9.0",
     "lodash.orderby": "^4.6.0",
     "v-datatable-light": "^0.8.2",
+    "vue-range-slider": "^0.6.0",
     "vue-simple-spinner": "^1.2.10",
     "vue3-table-lite": "^1.0.5"
   },

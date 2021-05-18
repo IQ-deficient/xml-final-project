@@ -16,7 +16,23 @@
                          class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200
                           focus:ring-opacity-10 rounded-md shadow-sm px-4 py-2 inline-flex items-center
                            border border-transparent font-semibold text-sm tracking-widest active:bg-gray-900
-                            focus:outline-none disabled:opacity-25 transition" style="padding-top: 8px"/>
+                            focus:outline-none disabled:opacity-25 transition" style="margin-right: 0.5em"/>
+                  <!--                  <multiselect-->
+                  <!--                      v-model="selected"-->
+                  <!--                      :options="options"-->
+                  <!--                     class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200-->
+                  <!--                          focus:ring-opacity-10 rounded-md shadow-sm px-4 py-2 inline-flex items-center-->
+                  <!--                           border border-transparent font-semibold text-sm tracking-widest active:bg-gray-900-->
+                  <!--                            focus:outline-none disabled:opacity-25 transition">-->
+                  <!--                  </multiselect>-->
+                  <select v-model="optionsFilter" v-on:keyup.enter="loadTableData()"
+                          class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200
+                          focus:ring-opacity-10 rounded-md shadow-sm px-4 py-2 inline-flex items-center
+                           border border-transparent font-semibold text-sm tracking-widest active:bg-gray-900
+                            focus:outline-none disabled:opacity-25 transition"
+                          style="min-width: 150px">
+                     <option v-for="item in options" :label="item" :value="item"></option>
+                  </select>
                   <button-lite @click="exportToPdf()" style="float: right">Export PDF</button-lite>
                   <button-lite @click="exportToJson()" style="float: right; margin-right: 0.5em">Export JSON
                   </button-lite>
@@ -48,11 +64,16 @@ import TableLite from "vue3-table-lite";
 import {defineComponent, reactive} from "vue";
 import ButtonLite from '../Jetstream/Button'
 import InputLite from '../Jetstream/Input'
+import Multiselect from '@suadelabs/vue3-multiselect'
+import Dropdown from "../Jetstream/Dropdown"
 
 export default defineComponent({
    name: "TermsOfService",
    data() {
       return {
+         selected: null,
+         options: ['All', '0 - 50', '50 - 200', '200 - 1000', '1000 and up'],
+         optionsFilter: 'All',
          filter: '',
          table: reactive({
             isLoading: false,
@@ -112,6 +133,7 @@ export default defineComponent({
             rows: [],
             totalRecordCount: 20,
             sortable: {
+               order: 'name',
                sort: "asc",
             },
             headerSort: [],
@@ -130,8 +152,13 @@ export default defineComponent({
       TableLite,
       ButtonLite,
       InputLite,
+      Multiselect,
+      Dropdown,
    },
    methods: {
+      test(data) {
+         console.log(data)
+      },
       importExcel() {
          console.log("IMPORT")
       },
@@ -149,41 +176,44 @@ export default defineComponent({
          this.table.rows = this.$inertia.page.props.products
          this.table.totalRecordCount = this.$inertia.page.props.products.length
       },
-      // cancerous column sorting
+      // perfectly working column sort
       doSearch(event) {
          let headerName = event.srcElement.innerText.toLowerCase();
 
-         if (this.table.headerSort[headerName] === 'asc') {
-            this.table.rows = this.table.rows.sort(function (row1, row2) {
-               if (typeof row1[headerName] == 'number') {
-                  return row2[headerName] - row1[headerName]
-               } else if (typeof row1[headerName] == 'string') {
+         this.table.rows = this.table.rows.sort(function (row1, row2) {
+            switch (typeof row1[headerName]) {
+               case "number":
+                  if (row1[headerName] > row2[headerName]) {
+                     return row2[headerName] - row1[headerName];
+                  }
+                  return row1[headerName] - row2[headerName];
+               case "string":
                   return -1;
-               }
-            })
-            this.table.headerSort[headerName] = 'desc'
-         } else {
-            this.table.rows = this.table.rows.sort(function (row1, row2) {
-               if (typeof row1[headerName] == 'number') {
-                  return row1[headerName] - row2[headerName]
-               } else if (typeof row1[headerName] == 'string') {
-                  return 1;
-               }
-            })
-            this.table.headerSort[headerName] = 'asc'
-         }
-         // console.log(this.table.headerSort[headerName])
+            }
+         })
 
          // purple arrow configuration
          this.table.sortable.order = headerName;
-         this.table.sortable.sort = this.table.headerSort[headerName];
-
+         if (this.table.sortable.sort == 'asc') {
+            this.table.sortable.sort = 'desc';
+         } else {
+            this.table.sortable.sort = 'asc';
+         }
       },
       tableLoadingFinish(elements) {
          this.table.isLoading = false;
       },
       updateCheckedRows(rowsKey) {
          // console.log(rowsKey)
+      },
+      findNumberInRange($price, $range) {
+         let $first = parseInt($range.split(' - ')[0]);
+         let $second = parseInt($range.split(' - ')[1]);
+
+         if ($price >= $first && $price <= $second) {
+            return $price;
+         }
+         return 0;
       },
       debugging(something) {
          console.log(something)
@@ -194,18 +224,35 @@ export default defineComponent({
       this.table.headerSort['name'] = 'asc'
       this.table.headerSort['price'] = 'asc'
       this.table.headerSort['description'] = 'asc'
-   },
+   }
+   ,
    computed: {
       // variable that sets table data by search string for item name and description
       filteredRows() {
-         return this.table.rows.filter(row => {
-            const searchName = row.name.toString().toLowerCase();
-            const searchDesc = row.description.toString().toLowerCase();
-            const searchTerm = this.filter.toLowerCase();
+         const searchTerm = this.filter.toLowerCase();
+         const searchOption = this.optionsFilter.toLowerCase();
 
-            return searchName.includes(searchTerm) || searchDesc.includes(searchTerm);
+         let termFiltered = this.table.rows.filter(row => {
+            return row.name.toLowerCase().includes(searchTerm) || row.description.toLowerCase().includes(searchTerm)
          });
-      },
+
+         if (searchOption == 'all') {
+            return termFiltered;
+         }
+
+         return termFiltered.filter(row => {
+            const searchPrice = row.price;
+            // returns the number searched for if found in given range
+            const result = this.findNumberInRange(searchPrice, searchOption);
+
+            if (result == searchPrice) {
+               return true;
+            }
+         });
+
+      }
+      ,
+
    }
 })
 
@@ -218,5 +265,10 @@ export default defineComponent({
    -moz-osx-font-smoothing: grayscale;
    text-align: center;
    color: #2c3e50;
+}
+
+.slider {
+   /* overwrite slider styles */
+   width: 200px;
 }
 </style>
