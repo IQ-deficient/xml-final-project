@@ -18067,7 +18067,18 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       console.log("IMPORT");
     },
     // exportToXml(url, filename)
-    exportToXml: function exportToXml() {},
+    exportToXml: function exportToXml() {
+      axios__WEBPACK_IMPORTED_MODULE_7___default()({
+        url: 'http://localhost:8000/exportToXml',
+        method: 'POST',
+        data: {
+          items: this.filteredTableData
+        },
+        responseType: 'blob'
+      }).then(function (response) {
+        console.log(response.data); // fileDownload(response, 'report.json');
+      });
+    },
     // final export to json
     exportToJson: function exportToJson() {
       js_file_download__WEBPACK_IMPORTED_MODULE_8___default()(JSON.stringify(this.filteredTableData), 'report.json');

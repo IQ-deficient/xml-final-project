@@ -171,7 +171,15 @@ export default defineComponent({
       },
       // exportToXml(url, filename)
       exportToXml() {
-
+         Axios({
+            url: 'http://localhost:8000/exportToXml',
+            method: 'POST',
+            data: {items: this.filteredTableData},
+            responseType: 'blob',
+         }).then(function (response) {
+            console.log(response.data)
+            // fileDownload(response, 'report.json');
+         });
       },
       // final export to json
       exportToJson() {

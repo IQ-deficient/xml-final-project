@@ -21,11 +21,19 @@ class ProductController extends Controller
 
     public function exportToXml(Request $request)
     {
-        $request->validate([
-            'items' => 'required'
-        ]);
+//        $request->validate([
+//            'items' => 'required'
+//        ]);
 
-        return json_encode($request->items);
+        $xml = new \DOMDocument("1.0");
+        $products = $xml->createElement('products');
+        $xml->appendChild($products);
+
+//        foreach ($request->items as $item) {
+//
+//        }
+
+        return $xml;
     }
 
     public function exportToJson(Request $request)
