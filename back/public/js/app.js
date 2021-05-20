@@ -17970,7 +17970,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _suadelabs_vue3_multiselect__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @suadelabs/vue3-multiselect */ "./node_modules/@suadelabs/vue3-multiselect/dist/vue3-multiselect.umd.min.js");
 /* harmony import */ var _suadelabs_vue3_multiselect__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_suadelabs_vue3_multiselect__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var _Jetstream_Dropdown__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Jetstream/Dropdown */ "./resources/js/Jetstream/Dropdown.vue");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var js_file_download__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! js-file-download */ "./node_modules/js-file-download/file-download.js");
+/* harmony import */ var js_file_download__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(js_file_download__WEBPACK_IMPORTED_MODULE_8__);
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+
 
 
 
@@ -18057,17 +18063,57 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     Dropdown: _Jetstream_Dropdown__WEBPACK_IMPORTED_MODULE_6__.default
   },
   methods: {
-    test: function test(data) {
-      console.log(data);
-    },
     importExcel: function importExcel() {
       console.log("IMPORT");
     },
-    exportToXml: function exportToXml() {
-      console.log('XML');
-    },
+    // exportToXml(url, filename)
+    exportToXml: function exportToXml() {},
+    // final export to json
     exportToJson: function exportToJson() {
-      console.log('JSON');
+      js_file_download__WEBPACK_IMPORTED_MODULE_8___default()(JSON.stringify(this.filteredTableData), 'report.json');
+    },
+    exportToJson1: function exportToJson1() {
+      // const fileDownload = require('js-file-download');
+      axios__WEBPACK_IMPORTED_MODULE_7___default()({
+        url: 'http://localhost:8000/exportToJson',
+        method: 'POST',
+        data: {
+          items: this.filteredTableData
+        },
+        responseType: 'blob' // Important
+
+      }).then(function (response) {
+        js_file_download__WEBPACK_IMPORTED_MODULE_8___default()(response.data, 'report.json');
+      });
+    },
+    // exportToJson(exportObj, exportName)
+    exportToJson2: function exportToJson2() {
+      var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.filteredTableData));
+      var downloadAnchorNode = document.createElement('a');
+      downloadAnchorNode.setAttribute("href", dataStr);
+      downloadAnchorNode.setAttribute("download", 'exportName' + ".json");
+      document.body.appendChild(downloadAnchorNode); // required for firefox
+
+      downloadAnchorNode.click();
+      downloadAnchorNode.remove();
+    },
+    exportToJson3: function exportToJson3() {
+      var saveTemplateAsFile = function saveTemplateAsFile(filename, jsonToWrite) {
+        var blob = new Blob([jsonToWrite], {
+          type: "text/json"
+        });
+        var link = document.createElement("a");
+        link.download = filename;
+        link.href = window.URL.createObjectURL(blob);
+        link.dataset.downloadurl = ["text/json", link.download, link.href].join(":");
+        var evt = new MouseEvent("click", {
+          view: window,
+          bubbles: true,
+          cancelable: true
+        });
+        link.dispatchEvent(evt);
+        link.remove();
+      };
     },
     exportToPdf: function exportToPdf() {
       console.log('PDF');
@@ -18107,6 +18153,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     },
     updateCheckedRows: function updateCheckedRows(rowsKey) {// console.log(rowsKey)
     },
+    // returns the number searched for if found in given range
     findNumberInRange: function findNumberInRange($price, $range) {
       var $first = parseInt($range.split(' - ')[0]);
       var $second = parseInt($range.split(' - ')[1]);
@@ -18128,22 +18175,23 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     this.table.headerSort['description'] = 'asc';
   },
   computed: {
-    // variable that sets table data by search string for item name and description
-    filteredRows: function filteredRows() {
+    filteredTableData: function filteredTableData() {
       var _this = this;
 
       var searchTerm = this.filter.toLowerCase();
-      var searchOption = this.optionsFilter.toLowerCase();
+      var searchOption = this.optionsFilter.toLowerCase(); // filter table data by search string for item name and description
+
       var termFiltered = this.table.rows.filter(function (row) {
         return row.name.toLowerCase().includes(searchTerm) || row.description.toLowerCase().includes(searchTerm);
       });
 
       if (searchOption == 'all') {
         return termFiltered;
-      }
+      } // applies price range filter to previously filtered data
+
 
       return termFiltered.filter(function (row) {
-        var searchPrice = row.price; // returns the number searched for if found in given range
+        var searchPrice = row.price;
 
         var result = _this.findNumberInRange(searchPrice, searchOption);
 
@@ -22069,7 +22117,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         placeholder: "Search...",
         "class": "border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200\r\n                          focus:ring-opacity-10 rounded-md shadow-sm px-4 py-2 inline-flex items-center\r\n                           border border-transparent font-semibold text-sm tracking-widest active:bg-gray-900\r\n                            focus:outline-none disabled:opacity-25 transition",
         style: {
-          "margin-right": "0.5em"
+          "margin-right": "0.5em",
+          "max-width": "150px"
         }
       }, null, 544
       /* HYDRATE_EVENTS, NEED_PATCH */
@@ -22095,7 +22144,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       /* UNKEYED_FRAGMENT */
       ))], 544
       /* HYDRATE_EVENTS, NEED_PATCH */
-      ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, _ctx.optionsFilter]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_button_lite, {
+      ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, _ctx.optionsFilter]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" maybe and just maybe group these "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_button_lite, {
         onClick: _cache[6] || (_cache[6] = function ($event) {
           return _ctx.exportToPdf();
         }),
@@ -22144,7 +22193,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         "is-loading": _ctx.table.isLoading,
         "is-re-search": _ctx.table.isReSearch,
         columns: _ctx.table.columns,
-        rows: _ctx.filteredRows,
+        rows: _ctx.filteredTableData,
         total: _ctx.table.totalRecordCount,
         sortable: _ctx.table.sortable,
         messages: _ctx.table.messages,
@@ -24461,6 +24510,51 @@ module.exports = function hasSymbols() {
 var bind = __webpack_require__(/*! function-bind */ "./node_modules/function-bind/index.js");
 
 module.exports = bind.call(Function.call, Object.prototype.hasOwnProperty);
+
+
+/***/ }),
+
+/***/ "./node_modules/js-file-download/file-download.js":
+/*!********************************************************!*\
+  !*** ./node_modules/js-file-download/file-download.js ***!
+  \********************************************************/
+/***/ ((module) => {
+
+module.exports = function(data, filename, mime, bom) {
+    var blobData = (typeof bom !== 'undefined') ? [bom, data] : [data]
+    var blob = new Blob(blobData, {type: mime || 'application/octet-stream'});
+    if (typeof window.navigator.msSaveBlob !== 'undefined') {
+        // IE workaround for "HTML7007: One or more blob URLs were
+        // revoked by closing the blob for which they were created.
+        // These URLs will no longer resolve as the data backing
+        // the URL has been freed."
+        window.navigator.msSaveBlob(blob, filename);
+    }
+    else {
+        var blobURL = (window.URL && window.URL.createObjectURL) ? window.URL.createObjectURL(blob) : window.webkitURL.createObjectURL(blob);
+        var tempLink = document.createElement('a');
+        tempLink.style.display = 'none';
+        tempLink.href = blobURL;
+        tempLink.setAttribute('download', filename);
+
+        // Safari thinks _blank anchor are pop ups. We only want to set _blank
+        // target if the browser does not support the HTML5 download attribute.
+        // This allows you to download files in desktop safari if pop up blocking
+        // is enabled.
+        if (typeof tempLink.download === 'undefined') {
+            tempLink.setAttribute('target', '_blank');
+        }
+
+        document.body.appendChild(tempLink);
+        tempLink.click();
+
+        // Fixes "webkit blob resource error 1"
+        setTimeout(function() {
+            document.body.removeChild(tempLink);
+            window.URL.revokeObjectURL(blobURL);
+        }, 200)
+    }
+}
 
 
 /***/ }),

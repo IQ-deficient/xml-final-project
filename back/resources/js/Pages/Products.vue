@@ -16,7 +16,8 @@
                          class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200
                           focus:ring-opacity-10 rounded-md shadow-sm px-4 py-2 inline-flex items-center
                            border border-transparent font-semibold text-sm tracking-widest active:bg-gray-900
-                            focus:outline-none disabled:opacity-25 transition" style="margin-right: 0.5em"/>
+                            focus:outline-none disabled:opacity-25 transition"
+                         style="margin-right: 0.5em; max-width: 150px"/>
                   <!--                  <multiselect-->
                   <!--                      v-model="selected"-->
                   <!--                      :options="options"-->
@@ -33,6 +34,7 @@
                           style="min-width: 150px">
                      <option v-for="item in options" :label="item" :value="item"></option>
                   </select>
+                  <!-- maybe and just maybe group these -->
                   <button-lite @click="exportToPdf()" style="float: right">Export PDF</button-lite>
                   <button-lite @click="exportToJson()" style="float: right; margin-right: 0.5em">Export JSON
                   </button-lite>
@@ -43,7 +45,7 @@
                    :is-loading="table.isLoading"
                    :is-re-search="table.isReSearch"
                    :columns="table.columns"
-                   :rows="filteredRows"
+                   :rows="filteredTableData"
                    :total="table.totalRecordCount"
                    :sortable="table.sortable"
                    :messages="table.messages"
@@ -66,13 +68,21 @@ import ButtonLite from '../Jetstream/Button'
 import InputLite from '../Jetstream/Input'
 import Multiselect from '@suadelabs/vue3-multiselect'
 import Dropdown from "../Jetstream/Dropdown"
+import Axios from 'axios'
+import fileDownload from 'js-file-download'
 
 export default defineComponent({
    name: "TermsOfService",
    data() {
       return {
          selected: null,
-         options: ['All', '0 - 50', '50 - 200', '200 - 1000', '1000 and up'],
+         options: [
+            'All',
+            '0 - 50',
+            '50 - 200',
+            '200 - 1000',
+            '1000 and up'
+         ],
          optionsFilter: 'All',
          filter: '',
          table: reactive({
@@ -156,17 +166,56 @@ export default defineComponent({
       Dropdown,
    },
    methods: {
-      test(data) {
-         console.log(data)
-      },
       importExcel() {
          console.log("IMPORT")
       },
+      // exportToXml(url, filename)
       exportToXml() {
-         console.log('XML')
+
       },
+      // final export to json
       exportToJson() {
-         console.log('JSON')
+         fileDownload(JSON.stringify(this.filteredTableData), 'report.json');
+      },
+      exportToJson1() {
+         // const fileDownload = require('js-file-download');
+         Axios({
+            url: 'http://localhost:8000/exportToJson',
+            method: 'POST',
+            data: {items: this.filteredTableData},
+            responseType: 'blob', // Important
+         }).then((response) => {
+            fileDownload(response.data, 'report.json');
+         });
+      },
+      // exportToJson(exportObj, exportName)
+      exportToJson2() {
+         const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.filteredTableData));
+         const downloadAnchorNode = document.createElement('a');
+         downloadAnchorNode.setAttribute("href", dataStr);
+         downloadAnchorNode.setAttribute("download", 'exportName' + ".json");
+         document.body.appendChild(downloadAnchorNode); // required for firefox
+         downloadAnchorNode.click();
+         downloadAnchorNode.remove();
+      },
+      exportToJson3() {
+         const saveTemplateAsFile = (filename, jsonToWrite) => {
+            const blob = new Blob([jsonToWrite], {type: "text/json"});
+            const link = document.createElement("a");
+
+            link.download = filename;
+            link.href = window.URL.createObjectURL(blob);
+            link.dataset.downloadurl = ["text/json", link.download, link.href].join(":");
+
+            const evt = new MouseEvent("click", {
+               view: window,
+               bubbles: true,
+               cancelable: true,
+            });
+
+            link.dispatchEvent(evt);
+            link.remove()
+         };
       },
       exportToPdf() {
          console.log('PDF')
@@ -206,6 +255,7 @@ export default defineComponent({
       updateCheckedRows(rowsKey) {
          // console.log(rowsKey)
       },
+      // returns the number searched for if found in given range
       findNumberInRange($price, $range) {
          let $first = parseInt($range.split(' - ')[0]);
          let $second = parseInt($range.split(' - ')[1]);
@@ -227,11 +277,11 @@ export default defineComponent({
    }
    ,
    computed: {
-      // variable that sets table data by search string for item name and description
-      filteredRows() {
+      filteredTableData() {
          const searchTerm = this.filter.toLowerCase();
          const searchOption = this.optionsFilter.toLowerCase();
 
+         // filter table data by search string for item name and description
          let termFiltered = this.table.rows.filter(row => {
             return row.name.toLowerCase().includes(searchTerm) || row.description.toLowerCase().includes(searchTerm)
          });
@@ -240,9 +290,10 @@ export default defineComponent({
             return termFiltered;
          }
 
+         // applies price range filter to previously filtered data
          return termFiltered.filter(row => {
             const searchPrice = row.price;
-            // returns the number searched for if found in given range
+
             const result = this.findNumberInRange(searchPrice, searchOption);
 
             if (result == searchPrice) {
@@ -250,8 +301,7 @@ export default defineComponent({
             }
          });
 
-      }
-      ,
+      },
 
    }
 })

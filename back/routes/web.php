@@ -50,9 +50,12 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         [ProductController::class, 'index']
     )->name('products');
 
-//    Route::get('/something', function () {
-//        return Inertia::render('Something', [
-//            'smth' => 'received data through prop',
-//        ]);
-//    });
+    Route::post('/exportToJson',
+        [ProductController::class, 'exportToJson']
+    )->name('exportToJson');
+
+    Route::post('/exportToXml',
+        [ProductController::class, 'exportToXml']
+    )->name('exportToXml');
+
 });

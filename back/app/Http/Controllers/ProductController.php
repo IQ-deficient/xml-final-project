@@ -19,6 +19,24 @@ class ProductController extends Controller
         ]);
     }
 
+    public function exportToXml(Request $request)
+    {
+        $request->validate([
+            'items' => 'required'
+        ]);
+
+        return json_encode($request->items);
+    }
+
+    public function exportToJson(Request $request)
+    {
+        $request->validate([
+            'items' => 'required'
+        ]);
+
+        return json_encode($request->items);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
