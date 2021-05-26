@@ -34,28 +34,41 @@ Route::get('/', function () {
 //Inertia::share();
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+
+    // view page routes
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
-
     Route::get('/suppliers', function () {
         return Inertia::render('TermsOfService');
     })->name('suppliers');
-
     Route::get('/sales', function () {
         return Inertia::render('PrivacyPolicy');
     })->name('sales');
-
     Route::get('/products',
         [ProductController::class, 'index']
     )->name('products');
 
+    // export json/xml/pdf file routes >>> PRODUCTS
     Route::post('/exportToJson',
         [ProductController::class, 'exportToJson']
     )->name('exportToJson');
-
     Route::post('/exportToXml',
         [ProductController::class, 'exportToXml']
     )->name('exportToXml');
+    Route::post('/exportToPdf',
+        [ProductController::class, 'exportToPdf']
+    )->name('exportToPdf');
+
+    // excel file routes >>> PRODUCTS
+    Route::get('file-import-export',
+        [ProductController::class, 'fileImportExport']);
+    Route::post('file-import',
+        [ProductController::class, 'fileImport'])
+        ->name('file-import');
+    Route::get('file-export',
+        [ProductController::class, 'fileExport'])
+        ->name('file-export');
 
 });
+

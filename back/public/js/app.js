@@ -17986,14 +17986,22 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 
 
+
+
+function test() {
+  console.log(this.table.rows);
+}
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,vue__WEBPACK_IMPORTED_MODULE_2__.defineComponent)({
   name: "TermsOfService",
   data: function data() {
     return {
+      importFile: null,
       selected: null,
-      options: ['All', '0 - 50', '50 - 200', '200 - 1000', '1000 and up'],
+      options: ['All', '0 - 50', '50 - 200', '200 - 1000', '1000 - 5000'],
       optionsFilter: 'All',
       filter: '',
+      filename: '',
       table: (0,vue__WEBPACK_IMPORTED_MODULE_2__.reactive)({
         isLoading: false,
         isReSearch: false,
@@ -18055,6 +18063,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   },
   props: ['terms'],
   components: {
+    Input: _Jetstream_Input__WEBPACK_IMPORTED_MODULE_4__.default,
     AppLayout: _Layouts_AppLayout__WEBPACK_IMPORTED_MODULE_0__.default,
     TableLite: (vue3_table_lite__WEBPACK_IMPORTED_MODULE_1___default()),
     ButtonLite: _Jetstream_Button__WEBPACK_IMPORTED_MODULE_3__.default,
@@ -18064,38 +18073,61 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   },
   methods: {
     importExcel: function importExcel() {
-      console.log("IMPORT");
+      // this.importFile = this.$refs.file
+      // console.log(this.importFile)
+      // return
+      this.importFile = this.$refs.file.files[0];
+      var data = new FormData();
+      data.append('file', this.importFile);
+      axios.post('http://localhost:8000/file-import', data); // .then(function (response) {
+      //    console.log(response, "responz")
+      // })
+    },
+    importExcel2: function importExcel2() {
+      // FILE VALIDATON???
+      console.log('changed');
+      var file = document.getElementById('file').files[0];
+      var formData = new FormData();
+      formData.append("file", file);
+      fetch('http://localhost:8000/file-import', {
+        method: "POST",
+        body: formData
+      }); // window.location.href = 'http://localhost:8000/file-import'
+      // window.location.href = 'http://localhost:8000/file-import-export'
     },
     // exportToXml(url, filename)
     exportToXml: function exportToXml() {
-      axios__WEBPACK_IMPORTED_MODULE_7___default()({
-        url: 'http://localhost:8000/exportToXml',
-        method: 'POST',
-        data: {
-          items: this.filteredTableData
-        },
-        responseType: 'blob'
-      }).then(function (response) {
-        console.log(response.data); // fileDownload(response, 'report.json');
-      });
+      if (this.filteredTableData.length != 0) {
+        var filename = this.filename;
+
+        if (filename == '') {
+          filename = 'file';
+        } // console.log(axios.defaults.baseURL = process.env.APP_URL)
+
+
+        axios__WEBPACK_IMPORTED_MODULE_7___default()({
+          url: 'http://localhost:8000/exportToXml',
+          method: 'POST',
+          data: {
+            items: this.filteredTableData
+          },
+          responseType: 'blob'
+        }).then(function (response) {
+          js_file_download__WEBPACK_IMPORTED_MODULE_8___default()(response.data, filename + '.xml');
+        });
+      }
     },
     // final export to json
     exportToJson: function exportToJson() {
-      js_file_download__WEBPACK_IMPORTED_MODULE_8___default()(JSON.stringify(this.filteredTableData), 'report.json');
-    },
-    exportToJson1: function exportToJson1() {
-      // const fileDownload = require('js-file-download');
-      axios__WEBPACK_IMPORTED_MODULE_7___default()({
-        url: 'http://localhost:8000/exportToJson',
-        method: 'POST',
-        data: {
-          items: this.filteredTableData
-        },
-        responseType: 'blob' // Important
+      if (this.filteredTableData.length != 0) {
+        var filename = this.filename;
 
-      }).then(function (response) {
-        js_file_download__WEBPACK_IMPORTED_MODULE_8___default()(response.data, 'report.json');
-      });
+        if (filename == '') {
+          filename = 'file';
+        }
+
+        js_file_download__WEBPACK_IMPORTED_MODULE_8___default()(JSON.stringify(this.filteredTableData), filename + '.json');
+      }
     },
     // exportToJson(exportObj, exportName)
     exportToJson2: function exportToJson2() {
@@ -18127,7 +18159,25 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       };
     },
     exportToPdf: function exportToPdf() {
-      console.log('PDF');
+      if (this.filteredTableData.length != 0) {
+        var filename = this.filename;
+
+        if (filename == '') {
+          filename = 'file';
+        }
+
+        axios__WEBPACK_IMPORTED_MODULE_7___default()({
+          url: 'http://localhost:8000/exportToPdf',
+          method: 'POST',
+          data: {
+            items: this.filteredTableData
+          } // responseType: 'blob',
+
+        }).then(function (response) {
+          // fileDownload(response.data, filename + '.pdf');
+          console.log(response.data);
+        });
+      }
     },
     // fill the table rows from inertia page prop rendered in page controller
     loadTableData: function loadTableData() {
@@ -18141,6 +18191,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         switch (_typeof(row1[headerName])) {
           case "number":
             if (row1[headerName] > row2[headerName]) {
+              // console.log(row1[headerName], row2[headerName])
               return row2[headerName] - row1[headerName];
             }
 
@@ -18210,6 +18261,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           return true;
         }
       });
+    },
+    testCom: function testCom() {
+      return console.log('computed ');
     }
   }
 }));
@@ -22086,14 +22140,21 @@ var _hoisted_4 = {
     "justify-content": "end"
   }
 };
+var _hoisted_5 = {
+  "for": "file",
+  style: {
+    "margin-right": "0.5em"
+  },
+  "class": "inline-flex items-center\r\n                   px-4 py-2 bg-indigo-500 border border-transparent\r\n                  rounded-md font-semibold text-sm text-white uppercase tracking-widest\r\n                  hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900\r\n                  focus:ring focus:ring-gray-300 disabled:opacity-25 transition custom-file-upload"
+};
 
-var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Import");
+var _hoisted_6 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Import ");
 
-var _hoisted_6 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Export PDF");
+var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Export PDF");
 
-var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Export JSON ");
+var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Export JSON ");
 
-var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Export XML");
+var _hoisted_9 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Export XML ");
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_button_lite = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("button-lite");
@@ -22104,21 +22165,16 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_app_layout, null, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("      <template #header>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("         <h2 class=\"font-semibold text-xl text-gray-800 leading-tight\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            IN PROGRESS"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("         </h2>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("      </template>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("               <welcome/>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_button_lite, {
-        onClick: _cache[1] || (_cache[1] = function ($event) {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("      <template #header>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("         <h2 class=\"font-semibold text-xl text-gray-800 leading-tight\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            IN PROGRESS"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("         </h2>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("      </template>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("               <welcome/>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("label", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("input", {
+        type: "file",
+        id: "file",
+        ref: "file",
+        onChange: _cache[1] || (_cache[1] = function ($event) {
           return _ctx.importExcel();
-        }),
-        style: {
-          "margin-right": "0.5em"
-        }
-      }, {
-        "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-          return [_hoisted_5];
-        }),
-        _: 1
-        /* STABLE */
-
-      }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("input", {
+        })
+      }, null, 544
+      /* HYDRATE_EVENTS, NEED_PATCH */
+      ), _hoisted_6]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("input", {
         "onUpdate:modelValue": _cache[2] || (_cache[2] = function ($event) {
           return _ctx.filter = $event;
         }),
@@ -22140,7 +22196,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         onKeyup: _cache[5] || (_cache[5] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withKeys)(function ($event) {
           return _ctx.loadTableData();
         }, ["enter"])),
-        "class": "border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200\r\n                          focus:ring-opacity-10 rounded-md shadow-sm px-4 py-2 inline-flex items-center\r\n                           border border-transparent font-semibold text-sm tracking-widest active:bg-gray-900\r\n                            focus:outline-none disabled:opacity-25 transition",
+        "class": "border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200\r\n                          focus:ring-opacity-10 rounded-md shadow-sm px-4 py-2 inline-flex items-c\r\n                          enter\r\n                           border border-transparent font-semibold text-sm tracking-widest active:bg-gray-900\r\n                            focus:outline-none disabled:opacity-25 transition",
         style: {
           "min-width": "150px"
         }
@@ -22160,11 +22216,12 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           return _ctx.exportToPdf();
         }),
         style: {
-          "float": "right"
+          "float": "right",
+          "background": "#1a202c"
         }
       }, {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-          return [_hoisted_6];
+          return [_hoisted_7];
         }),
         _: 1
         /* STABLE */
@@ -22179,7 +22236,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         }
       }, {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-          return [_hoisted_7];
+          return [_hoisted_8];
         }),
         _: 1
         /* STABLE */
@@ -22194,12 +22251,25 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         }
       }, {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-          return [_hoisted_8];
+          return [_hoisted_9];
         }),
         _: 1
         /* STABLE */
 
-      })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_table_lite, {
+      }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("input", {
+        "onUpdate:modelValue": _cache[9] || (_cache[9] = function ($event) {
+          return _ctx.filename = $event;
+        }),
+        placeholder: "Enter file name",
+        "class": "border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200\r\n                          focus:ring-opacity-10 rounded-md shadow-sm px-4 py-2 inline-flex items-center\r\n                           border border-transparent font-semibold text-sm tracking-widest active:bg-gray-900\r\n                            focus:outline-none disabled:opacity-25 transition",
+        style: {
+          "margin-right": "0.5em",
+          "max-width": "150px",
+          "float": "right"
+        }
+      }, null, 512
+      /* NEED_PATCH */
+      ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, _ctx.filename]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Data Table "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_table_lite, {
         "has-checkbox": false,
         "is-loading": _ctx.table.isLoading,
         "is-re-search": _ctx.table.isReSearch,
@@ -22208,7 +22278,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         total: _ctx.table.totalRecordCount,
         sortable: _ctx.table.sortable,
         messages: _ctx.table.messages,
-        onClick: _cache[9] || (_cache[9] = function ($event) {
+        onClick: _cache[10] || (_cache[10] = function ($event) {
           return _ctx.doSearch($event);
         }),
         onIsFinished: _ctx.tableLoadingFinish,
@@ -23761,7 +23831,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.termsofservice {\r\n   font-family: Avenir, Helvetica, Arial, sans-serif;\r\n   -webkit-font-smoothing: antialiased;\r\n   -moz-osx-font-smoothing: grayscale;\r\n   text-align: center;\r\n   color: #2c3e50;\n}\n.slider {\r\n   /* overwrite slider styles */\r\n   width: 200px;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.termsofservice {\r\n   font-family: Avenir, Helvetica, Arial, sans-serif;\r\n   -webkit-font-smoothing: antialiased;\r\n   -moz-osx-font-smoothing: grayscale;\r\n   text-align: center;\r\n   color: #2c3e50;\n}\n.slider {\r\n   /* overwrite slider styles */\r\n   width: 200px;\n}\ninput[type=\"file\"] {\r\n   display: none;\n}\n.custom-file-upload {\r\n   cursor: pointer;\n}\r\n\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

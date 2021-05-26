@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ProductExport;
+use App\Imports\ProductImport;
 use App\Models\Product;
+use GuzzleHttp\Psr7\Header;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use Maatwebsite\Excel\Facades\Excel;
 use mysql_xdevapi\Table;
 
 class ProductController extends Controller
@@ -19,21 +23,79 @@ class ProductController extends Controller
         ]);
     }
 
-    public function exportToXml(Request $request)
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    public function fileImportExport()
+    {
+        return view('file-import');
+    }
+
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    public function fileImport(Request $request)
+    {
+        Excel::import(new ProductImport, $request->file('file'));
+        return back();
+    }
+
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    public function fileExport()
+    {
+        return Excel::download(new ProductExport, 'users-collection.xlsx');
+    }
+
+    public function exportToPdf(Request $request)
     {
 //        $request->validate([
 //            'items' => 'required'
 //        ]);
 
-        $xml = new \DOMDocument("1.0");
-        $products = $xml->createElement('products');
+        //        return env('APP_URL');
+
+        $pdf = new \FPDF('P', 'mm', 'A4');
+        $pdf->AddPage();
+        $pdf->SetFont('Arial', 'B', 16);
+
+        $pdf->Cell(40, 10, 'Product ID', 1);
+        $pdf->Cell(40, 10, 'Product Name', 1);
+        $pdf->Cell(40, 10, 'Product Price', 1);
+        $pdf->Cell(40, 10, 'Product Description', 1);
+
+
+        return $pdf->Output();
+    }
+
+    public function exportToXml(Request $request)
+    {
+        $request->validate([
+            'items' => 'required'
+        ]);
+
+        $xml = new \DOMDocument();
+        $products = $xml->createElement('Products_Table');
         $xml->appendChild($products);
 
-//        foreach ($request->items as $item) {
-//
-//        }
+        foreach ($request->items as $item) {
+            $product = $xml->createElement('Product');
+            $products->appendChild($product);
 
-        return $xml;
+            $name = $xml->createElement('Name', $item['name']);
+            $product->appendChild($name);
+            $price = $xml->createElement('Price', $item['price']);
+            $product->appendChild($price);
+            $description = $xml->createElement('Description', $item['description']);
+            $product->appendChild($description);
+//            $created_at = $xml->createElement('Created_at', $item['created_at']);
+//            $product->appendChild($created_at);
+//            $updated_at = $xml->createElement('Updated_at', $item['updated_at']);
+//            $product->appendChild($updated_at);
+        }
+
+        return $xml->saveXML();
     }
 
     public function exportToJson(Request $request)
