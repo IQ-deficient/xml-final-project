@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
+use Mpdf\Mpdf;
+use Mpdf\MpdfException;
 use mysql_xdevapi\Table;
 
 class ProductController extends Controller
@@ -48,6 +50,9 @@ class ProductController extends Controller
         return Excel::download(new ProductExport, 'users-collection.xlsx');
     }
 
+    /**
+     * @throws MpdfException
+     */
     public function exportToPdf(Request $request)
     {
 //        $request->validate([
@@ -56,17 +61,13 @@ class ProductController extends Controller
 
         //        return env('APP_URL');
 
-        $pdf = new \FPDF('P', 'mm', 'A4');
-        $pdf->AddPage();
-        $pdf->SetFont('Arial', 'B', 16);
+        require_once __DIR__ . '/../../../vendor/autoload.php';
+        $mpdf = new \Mpdf\Mpdf();
 
-        $pdf->Cell(40, 10, 'Product ID', 1);
-        $pdf->Cell(40, 10, 'Product Name', 1);
-        $pdf->Cell(40, 10, 'Product Price', 1);
-        $pdf->Cell(40, 10, 'Product Description', 1);
+        $mpdf->Bookmark('Start of the document');
+        $mpdf->WriteHTML('<div>Section 1 text</div>');
 
-
-        return $pdf->Output();
+        return $mpdf->Output();
     }
 
     public function exportToXml(Request $request)

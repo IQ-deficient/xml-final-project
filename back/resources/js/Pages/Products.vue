@@ -41,24 +41,24 @@
                           style="min-width: 150px; margin-right: 0.5em">
                      <option v-for="item in options" :label="item" :value="item"></option>
                   </select>
-                  <button-lite
-                      @click="currentPage > 0 ? table.rows = chunkedData[--currentPage] : ''"
-                      style="">
-                     {{ '<-' }}
-                  </button-lite>
-                  <div class="border-gray-300 focus:border-indigo-300 shadow-sm px-1 py-2 inline-flex items-center
-                           border border-transparent font-semibold text-sm tracking-widest active:bg-gray-900
-                            focus:outline-none disabled:opacity-25 transition">
-                     {{ this.currentPage + 1 }}
-                  </div>
-                  <button-lite
-                      @click="currentPage < chunkedData.length -1 ? table.rows = chunkedData[++currentPage] : ''"
-                      style="margin-right: 0.5em">
-                     {{ '->' }}
-                  </button-lite>
+                  <!--                  <button-lite-->
+                  <!--                      @click="currentPage > 0 ? table.rows = chunkedData[&#45;&#45;currentPage] : ''"-->
+                  <!--                      style="">-->
+                  <!--                     {{ '<-' }}-->
+                  <!--                  </button-lite>-->
+                  <!--                  <div class="border-gray-300 focus:border-indigo-300 shadow-sm px-1 py-2 inline-flex items-center-->
+                  <!--                           border border-transparent font-semibold text-sm tracking-widest active:bg-gray-900-->
+                  <!--                            focus:outline-none disabled:opacity-25 transition">-->
+                  <!--                     {{ this.currentPage + 1 }}-->
+                  <!--                  </div>-->
+                  <!--                  <button-lite-->
+                  <!--                      @click="currentPage < chunkedData.length -1 ? table.rows = chunkedData[++currentPage] : ''"-->
+                  <!--                      style="margin-right: 0.5em">-->
+                  <!--                     {{ '->' }}-->
+                  <!--                  </button-lite>-->
 
                   <!-- maybe and just maybe group these -->
-                  <button-lite @click="exportToPdf()" style="float: right; background: #1a202c">Export PDF</button-lite>
+                  <button-lite @click="exportToPdf()" style="float: right;">Export PDF</button-lite>
                   <button-lite @click="exportToJson()" style="float: right; margin-right: 0.5em">Export JSON
                   </button-lite>
                   <button-lite @click="exportToXml()" style="float: right; margin-right: 0.5em">Export XML
@@ -112,7 +112,8 @@ import Multiselect from '@suadelabs/vue3-multiselect'
 import Dropdown from "../Jetstream/Dropdown"
 import Axios from 'axios'
 import fileDownload from 'js-file-download'
-import Input from "../Jetstream/Input";
+import Input from "../Jetstream/Input"
+import {jsPDF} from "jspdf";
 
 function test() {
    console.log(this.table.rows)
@@ -219,27 +220,27 @@ export default defineComponent({
       Dropdown,
    },
    methods: {
-      doChunk(data) {
-         if (data.length == 0) return;
-
-         let chunkedArray = [];
-         let previousChunk = 0;
-
-         for (let i = 0; i < Math.ceil(data.length / 10); i++) {
-
-            let tempArray = [];
-
-            for (let j = previousChunk; j < previousChunk + this.chunkSize; j++) {
-               if (!data[j]) break;
-               tempArray.push(data[j])
-            }
-
-            chunkedArray[i] = tempArray
-            previousChunk += this.chunkSize;
-         }
-
-         return chunkedArray;
-      },
+      // doChunk(data) {
+      //    if (data.length == 0) return;
+      //
+      //    let chunkedArray = [];
+      //    let previousChunk = 0;
+      //
+      //    for (let i = 0; i < Math.ceil(data.length / 10); i++) {
+      //
+      //       let tempArray = [];
+      //
+      //       for (let j = previousChunk; j < previousChunk + this.chunkSize; j++) {
+      //          if (!data[j]) break;
+      //          tempArray.push(data[j])
+      //       }
+      //
+      //       chunkedArray[i] = tempArray
+      //       previousChunk += this.chunkSize;
+      //    }
+      //
+      //    return chunkedArray;
+      // },
       importExcel() {
          // this.importFile = this.$refs.file
          // console.log(this.importFile)
@@ -325,8 +326,64 @@ export default defineComponent({
             link.remove()
          };
       },
-      // TODO pdf export
       exportToPdf() {
+         if (this.filteredTableData.length != 0) {
+            let filename = this.filename
+            if (filename == '') {
+               filename = 'file'
+            }
+            const doc = new jsPDF(
+                {putOnlyUsedFonts: true, orientation: "landscape", maxLineWidth: 25});
+            let items = this.filteredTableData
+
+            let generateData = function (amount) {
+               let result = [];
+               for (let k = 0; k < amount; k++) {
+                  let data = {
+                     id: items[k].id.toString(),
+                     name: items[k].name,
+                     price: items[k].price.toString(),
+                     description: items[k].description,
+                     is_active: items[k].is_active.toString(),
+                  };
+                  result.push(Object.assign({}, data));
+               }
+               // for (let i = 0; i < amount; i += 1) {
+               //    data.id = (i + 1).toString();
+               //    result.push(Object.assign({}, data));
+               // }
+               return result;
+            };
+
+            function createHeaders(keys) {
+               let result = [];
+               for (let i = 0; i < keys.length; i += 1) {
+                  result.push({
+                     id: keys[i],
+                     name: keys[i],
+                     prompt: keys[i],
+                     width: 65,
+                     align: "center",
+                     padding: 0
+                  });
+               }
+               return result;
+            }
+
+            let headers = createHeaders([
+               "id",
+               "name",
+               "price",
+               "description",
+               "is_active",
+            ]);
+            doc.table(1, 1, generateData(items.length), headers, {autoSize: false});
+
+            doc.save(filename + ".pdf");
+         }
+      }
+      ,
+      exportToPdf1() {
          if (this.filteredTableData.length != 0) {
             let filename = this.filename
             if (filename == '') {
@@ -336,19 +393,25 @@ export default defineComponent({
                url: 'http://localhost:8000/exportToPdf',
                method: 'POST',
                data: {items: this.filteredTableData},
+               headers: {
+                  'Content-Type': 'application/pdf'
+               }
                // responseType: 'blob',
             }).then(function (response) {
                // fileDownload(response.data, filename + '.pdf');
                console.log(response.data)
             });
          }
-      },
+      }
+      ,
       // fill the table rows from inertia page prop rendered in page controller
       loadTableData() {
          this.table.rows = this.$inertia.page.props.products
-         this.chunkedData = this.doChunk(this.$inertia.page.props.products)
-         this.table.rows = this.chunkedData.length !== 0 ? this.chunkedData[0] : []
-      },
+         this.table.totalRecordCount = this.table.rows.length
+         // this.chunkedData = this.doChunk(this.$inertia.page.props.products)
+         // this.table.rows = this.chunkedData.length !== 0 ? this.chunkedData[0] : []
+      }
+      ,
       // perfectly working column sort
       doSearch(event) {
          let headerName = event.srcElement.innerText.toLowerCase();
@@ -373,13 +436,16 @@ export default defineComponent({
          } else {
             this.table.sortable.sort = 'asc';
          }
-      },
+      }
+      ,
       tableLoadingFinish(elements) {
          this.table.isLoading = false;
-      },
+      }
+      ,
       updateCheckedRows(rowsKey) {
          // console.log(rowsKey)
-      },
+      }
+      ,
       // returns the number searched for if found in given range
       findNumberInRange($price, $range) {
          let $first = parseInt($range.split(' - ')[0]);
@@ -389,7 +455,8 @@ export default defineComponent({
             return $price;
          }
          return 0;
-      },
+      }
+      ,
       debugging(something) {
          console.log(something)
       }
@@ -424,11 +491,7 @@ export default defineComponent({
                return true;
             }
          });
-
       },
-      testCom: function () {
-         return console.log('computed ')
-      }
 
    }
 })

@@ -15,6 +15,7 @@
     "bootstrap-vue": "^2.21.2",
     "eslint-plugin-vue": "^7.9.0",
     "js-file-download": "^0.4.12",
+    "jspdf": "^2.3.1",
     "lodash.orderby": "^4.6.0",
     "v-datatable-light": "^0.8.2",
     "vue-range-slider": "^0.6.0",
