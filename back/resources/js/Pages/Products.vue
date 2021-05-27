@@ -12,7 +12,7 @@
                <!--               <welcome/>-->
                <div style="padding: 0.5em; justify-content: end">
                   <label for="file" style="margin-right: 0.5em" class="inline-flex items-center
-                   px-4 py-2 bg-indigo-500 border border-transparent
+                   px-1 py-2 bg-indigo-500 border border-transparent
                   rounded-md font-semibold text-sm text-white uppercase tracking-widest
                   hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900
                   focus:ring focus:ring-gray-300 disabled:opacity-25 transition custom-file-upload">
@@ -20,7 +20,7 @@
                   </label>
                   <input v-model="filter" v-on:keyup.enter="loadTableData()" placeholder="Search..."
                          class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200
-                          focus:ring-opacity-10 rounded-md shadow-sm px-4 py-2 inline-flex items-center
+                          focus:ring-opacity-10 rounded-md shadow-sm px-1 py-2 inline-flex items-center
                            border border-transparent font-semibold text-sm tracking-widest active:bg-gray-900
                             focus:outline-none disabled:opacity-25 transition"
                          style="margin-right: 0.5em; max-width: 150px"/>
@@ -34,14 +34,28 @@
                   <!--                  </multiselect>-->
                   <select v-model="optionsFilter" v-on:keyup.enter="loadTableData()"
                           class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200
-                          focus:ring-opacity-10 rounded-md shadow-sm px-4 py-2 inline-flex items-c
+                          focus:ring-opacity-10 rounded-md shadow-sm px-1 py-2 inline-flex items-c
                           enter
                            border border-transparent font-semibold text-sm tracking-widest active:bg-gray-900
                             focus:outline-none disabled:opacity-25 transition"
-                          style="min-width: 150px">
+                          style="min-width: 150px; margin-right: 0.5em">
                      <option v-for="item in options" :label="item" :value="item"></option>
                   </select>
-
+                  <button-lite
+                      @click="currentPage > 0 ? table.rows = chunkedData[--currentPage] : ''"
+                      style="">
+                     {{ '<-' }}
+                  </button-lite>
+                  <div class="border-gray-300 focus:border-indigo-300 shadow-sm px-1 py-2 inline-flex items-center
+                           border border-transparent font-semibold text-sm tracking-widest active:bg-gray-900
+                            focus:outline-none disabled:opacity-25 transition">
+                     {{ this.currentPage + 1 }}
+                  </div>
+                  <button-lite
+                      @click="currentPage < chunkedData.length -1 ? table.rows = chunkedData[++currentPage] : ''"
+                      style="margin-right: 0.5em">
+                     {{ '->' }}
+                  </button-lite>
 
                   <!-- maybe and just maybe group these -->
                   <button-lite @click="exportToPdf()" style="float: right; background: #1a202c">Export PDF</button-lite>
@@ -49,9 +63,9 @@
                   </button-lite>
                   <button-lite @click="exportToXml()" style="float: right; margin-right: 0.5em">Export XML
                   </button-lite>
-                  <input v-model="filename" placeholder="Enter file name"
+                  <input v-model="filename" placeholder="File name..."
                          class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200
-                          focus:ring-opacity-10 rounded-md shadow-sm px-4 py-2 inline-flex items-center
+                          focus:ring-opacity-10 rounded-md shadow-sm px-1 py-2 inline-flex items-center
                            border border-transparent font-semibold text-sm tracking-widest active:bg-gray-900
                             focus:outline-none disabled:opacity-25 transition"
                          style="margin-right: 0.5em; max-width: 150px; float: right"/>
@@ -70,6 +84,17 @@
                    @is-finished="tableLoadingFinish"
                    @return-checked-rows="updateCheckedRows"
                />
+               <!--               <button-lite-->
+               <!--                   @click="currentPage > 0 ? table.rows = chunkedData[&#45;&#45;currentPage] : ''"-->
+               <!--                   style="margin-right: 0.5em">-->
+               <!--                  {{ '<-' }}-->
+               <!--               </button-lite>-->
+               <!--               <button-lite-->
+               <!--                   @click="currentPage < chunkedData.length -1 ? table.rows = chunkedData[++currentPage] : ''"-->
+               <!--                   style="margin-right: 0.5em">-->
+               <!--                  {{ '->' }}-->
+               <!--               </button-lite>-->
+
             </div>
          </div>
       </div>
@@ -109,6 +134,9 @@ export default defineComponent({
          optionsFilter: 'All',
          filter: '',
          filename: '',
+         chunkSize: 10,
+         chunkedData: [],
+         currentPage: 0,
          table: reactive({
             isLoading: false,
             isReSearch: false,
@@ -165,7 +193,7 @@ export default defineComponent({
                // },
             ],
             rows: [],
-            totalRecordCount: 20,
+            totalRecordCount: 5,
             sortable: {
                order: 'name',
                sort: "asc",
@@ -191,6 +219,27 @@ export default defineComponent({
       Dropdown,
    },
    methods: {
+      doChunk(data) {
+         if (data.length == 0) return;
+
+         let chunkedArray = [];
+         let previousChunk = 0;
+
+         for (let i = 0; i < Math.ceil(data.length / 10); i++) {
+
+            let tempArray = [];
+
+            for (let j = previousChunk; j < previousChunk + this.chunkSize; j++) {
+               if (!data[j]) break;
+               tempArray.push(data[j])
+            }
+
+            chunkedArray[i] = tempArray
+            previousChunk += this.chunkSize;
+         }
+
+         return chunkedArray;
+      },
       importExcel() {
          // this.importFile = this.$refs.file
          // console.log(this.importFile)
@@ -200,7 +249,9 @@ export default defineComponent({
          data.append('file', this.importFile);
 
          axios.post('http://localhost:8000/file-import', data)
-             // .then(function (response) {
+         alert('Success')
+
+         // .then(function (response) {
          //    console.log(response, "responz")
          // })
       },
@@ -274,6 +325,7 @@ export default defineComponent({
             link.remove()
          };
       },
+      // TODO pdf export
       exportToPdf() {
          if (this.filteredTableData.length != 0) {
             let filename = this.filename
@@ -294,7 +346,8 @@ export default defineComponent({
       // fill the table rows from inertia page prop rendered in page controller
       loadTableData() {
          this.table.rows = this.$inertia.page.props.products
-         this.table.totalRecordCount = this.$inertia.page.props.products.length
+         this.chunkedData = this.doChunk(this.$inertia.page.props.products)
+         this.table.rows = this.chunkedData.length !== 0 ? this.chunkedData[0] : []
       },
       // perfectly working column sort
       doSearch(event) {
@@ -350,7 +403,7 @@ export default defineComponent({
    computed: {
       filteredTableData() {
          const searchTerm = this.filter.toLowerCase();
-         const searchOption = this.optionsFilter.toLowerCase();
+         const searchOption = this.optionsFilter.toLowerCase()
 
          // filter table data by search string for item name and description
          let termFiltered = this.table.rows.filter(row => {
