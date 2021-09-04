@@ -49,7 +49,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         [ProductController::class, 'index']
     )->name('products');
 
-    // export json/xml/pdf file routes >>> PRODUCTS
+    // export json/xml/pdf fdeile routes >>> PRODUCTS
     Route::post('/exportToJson',
         [ProductController::class, 'exportToJson']
     )->name('exportToJson');
