@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\SaleController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -39,15 +41,27 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
-    Route::get('/suppliers', function () {
+    Route::get('/termsOfService', function () {
         return Inertia::render('TermsOfService');
-    })->name('suppliers');
-    Route::get('/sales', function () {
+    })->name('termsOfService');
+    Route::get('/privacyPolicy', function () {
         return Inertia::render('PrivacyPolicy');
-    })->name('sales');
+    })->name('privacyPolicy');
+
+//    PRODUCTS
     Route::get('/products',
         [ProductController::class, 'index']
     )->name('products');
+
+//    SUPPLIERS
+    Route::get('/suppliers',
+        [SupplierController::class, 'index']
+    )->name('suppliers');
+
+//    SALES
+    Route::get('/sales',
+        [SaleController::class, 'index']
+    )->name('sales');
 
     // export json/xml/pdf fdeile routes >>> PRODUCTS
     Route::post('/exportToJson',

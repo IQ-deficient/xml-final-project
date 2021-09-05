@@ -1,10 +1,5 @@
 <template>
     <app-layout>
-<!--              <template #header>-->
-<!--                 <h2 class="font-semibold text-xl text-gray-800 leading-tight">-->
-<!--                    IN PROGRESS-->
-<!--                 </h2>-->
-<!--              </template>-->
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -18,7 +13,13 @@
                   focus:ring focus:ring-gray-300 disabled:opacity-25 transition custom-file-upload">
                             <input type="file" id="file" ref="file" v-on:change="importExcel()"/> Import
                         </label>
-                        <input v-model="filter" v-on:keyup.enter="loadTableData()" placeholder="Search..."
+                        <input v-model="filter" v-on:keyup.enter="loadTableData()" placeholder="Search name"
+                               class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200
+                          focus:ring-opacity-10 rounded-md shadow-sm px-1 py-2 inline-flex items-center
+                           border border-transparent font-semibold text-sm tracking-widest active:bg-gray-900
+                            focus:outline-none disabled:opacity-25 transition"
+                               style="margin-right: 0.5em; max-width: 150px"/>
+                        <input v-model="filter2" v-on:keyup.enter="loadTableData()" placeholder="Search location"
                                class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200
                           focus:ring-opacity-10 rounded-md shadow-sm px-1 py-2 inline-flex items-center
                            border border-transparent font-semibold text-sm tracking-widest active:bg-gray-900
@@ -32,15 +33,15 @@
                         <!--                           border border-transparent font-semibold text-sm tracking-widest active:bg-gray-900-->
                         <!--                            focus:outline-none disabled:opacity-25 transition">-->
                         <!--                  </multiselect>-->
-                        <select v-model="optionsFilter" v-on:keyup.enter="loadTableData()"
-                                class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200
-                          focus:ring-opacity-10 rounded-md shadow-sm px-1 py-2 inline-flex items-c
-                          enter
-                           border border-transparent font-semibold text-sm tracking-widest active:bg-gray-900
-                            focus:outline-none disabled:opacity-25 transition"
-                                style="min-width: 150px; margin-right: 0.5em">
-                            <option v-for="item in options" :label="item" :value="item"></option>
-                        </select>
+<!--                        <select v-model="optionsFilter" v-on:keyup.enter="loadTableData()"-->
+<!--                                class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200-->
+<!--                          focus:ring-opacity-10 rounded-md shadow-sm px-1 py-2 inline-flex items-c-->
+<!--                          enter-->
+<!--                           border border-transparent font-semibold text-sm tracking-widest active:bg-gray-900-->
+<!--                            focus:outline-none disabled:opacity-25 transition"-->
+<!--                                style="min-width: 150px; margin-right: 0.5em">-->
+<!--                            <option v-for="item in options" :label="item" :value="item"></option>-->
+<!--                        </select>-->
                         <!--                  <button-lite-->
                         <!--                      @click="currentPage > 0 ? table.rows = chunkedData[&#45;&#45;currentPage] : ''"-->
                         <!--                      style="">-->
@@ -120,20 +121,14 @@ function test() {
 }
 
 export default defineComponent({
-    name: "Products",
+    name: "Suppliers",
     data() {
         return {
             importFile: null,
             selected: null,
-            options: [
-                'All',
-                '0 - 50',
-                '50 - 200',
-                '200 - 1000',
-                '1000 - 5000'
-            ],
             optionsFilter: 'All',
             filter: '',
+            filter2: '',
             filename: '',
             chunkSize: 10,
             chunkedData: [],
@@ -159,16 +154,8 @@ export default defineComponent({
                         },
                     },
                     {
-                        label: "Price",
-                        field: "price",
-                        width: "5%",
-                        sortable: true,
-                        isKey: true,
-
-                    },
-                    {
-                        label: "Description",
-                        field: "description",
+                        label: "Location",
+                        field: "location",
                         width: "25%",
                         sortable: true,
                     },
@@ -271,7 +258,6 @@ export default defineComponent({
         },
         // exportToXml(url, filename)
         exportToXml() {
-            console.log(this.filteredTableData)
             if (this.filteredTableData.length != 0) {
                 let filename = this.filename
                 if (filename == '') {
@@ -299,34 +285,6 @@ export default defineComponent({
             }
         },
         // exportToJson(exportObj, exportName)
-        exportToJson2() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.filteredTableData));
-            const downloadAnchorNode = document.createElement('a');
-            downloadAnchorNode.setAttribute("href", dataStr);
-            downloadAnchorNode.setAttribute("download", 'exportName' + ".json");
-            document.body.appendChild(downloadAnchorNode); // required for firefox
-            downloadAnchorNode.click();
-            downloadAnchorNode.remove();
-        },
-        exportToJson3() {
-            const saveTemplateAsFile = (filename, jsonToWrite) => {
-                const blob = new Blob([jsonToWrite], {type: "text/json"});
-                const link = document.createElement("a");
-
-                link.download = filename;
-                link.href = window.URL.createObjectURL(blob);
-                link.dataset.downloadurl = ["text/json", link.download, link.href].join(":");
-
-                const evt = new MouseEvent("click", {
-                    view: window,
-                    bubbles: true,
-                    cancelable: true,
-                });
-
-                link.dispatchEvent(evt);
-                link.remove()
-            };
-        },
         exportToPdf() {
             if (this.filteredTableData.length != 0) {
                 let filename = this.filename
@@ -374,8 +332,7 @@ export default defineComponent({
                 let headers = createHeaders([
                     "id",
                     "name",
-                    "price",
-                    "description",
+                    "location",
                     "is_active",
                 ]);
                 doc.table(1, 1, generateData(items.length), headers, {autoSize: false});
@@ -384,32 +341,11 @@ export default defineComponent({
             }
         }
         ,
-        exportToPdf1() {
-            if (this.filteredTableData.length != 0) {
-                let filename = this.filename
-                if (filename == '') {
-                    filename = 'file'
-                }
-                Axios({
-                    url: 'http://localhost:8000/exportToPdf',
-                    method: 'POST',
-                    data: {items: this.filteredTableData},
-                    headers: {
-                        'Content-Type': 'application/pdf'
-                    }
-                    // responseType: 'blob',
-                }).then(function (response) {
-                    // fileDownload(response.data, filename + '.pdf');
-                    console.log(response.data)
-                });
-            }
-        }
-        ,
         // fill the table rows from inertia page prop rendered in page controller
         loadTableData() {
-            this.table.rows = this.$inertia.page.props.products
+            this.table.rows = this.$inertia.page.props.suppliers
             this.table.totalRecordCount = this.table.rows.length
-            // this.chunkedData = this.doChunk(this.$inertia.page.props.products)
+            // this.chunkedData = this.doChunk(this.$inertia.page.props.suppliers)
             // this.table.rows = this.chunkedData.length !== 0 ? this.chunkedData[0] : []
         }
         ,
@@ -465,33 +401,37 @@ export default defineComponent({
     created() {
         this.loadTableData()
         this.table.headerSort['name'] = 'asc'
-        this.table.headerSort['price'] = 'asc'
-        this.table.headerSort['description'] = 'asc'
+        this.table.headerSort['location'] = 'asc'
     },
     computed: {
         filteredTableData() {
             const searchTerm = this.filter.toLowerCase();
-            const searchOption = this.optionsFilter.toLowerCase()
+            const searchTermLocation = this.filter2.toLowerCase()
 
-            // filter table data by search string for item name and description
+            // filter table data by search string for item name and location
             let termFiltered = this.table.rows.filter(row => {
-                return row.name.toLowerCase().includes(searchTerm) || row.description.toLowerCase().includes(searchTerm)
+                return row.name.toLowerCase().includes(searchTerm)
+            });
+            let termFilteredAgain = termFiltered.filter(row => {
+                return row.location.toLowerCase().includes(searchTermLocation)
             });
 
-            if (searchOption == 'all') {
-                return termFiltered;
-            }
+            return termFilteredAgain;
 
-            // applies price range filter to previously filtered data
-            return termFiltered.filter(row => {
-                const searchPrice = row.price;
-
-                const result = this.findNumberInRange(searchPrice, searchOption);
-
-                if (result == searchPrice) {
-                    return true;
-                }
-            });
+            // if (searchOption == 'all') {
+            //     return termFiltered;
+            // }
+            //
+            // // applies price range filter to previously filtered data
+            // return termFiltered.filter(row => {
+            //     const searchPrice = row.price;
+            //
+            //     const result = this.findNumberInRange(searchPrice, searchOption);
+            //
+            //     if (result == searchPrice) {
+            //         return true;
+            //     }
+            // });
         },
 
     }

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\ProductExport;
 use App\Imports\ProductImport;
 use App\Models\Product;
-use GuzzleHttp\Psr7\Header;
+use \GuzzleHttp\Psr7\Header;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Sale;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class SaleController extends Controller
 {
@@ -14,7 +15,11 @@ class SaleController extends Controller
      */
     public function index()
     {
-        return Sale::all();
+        $sales = Sale::all();
+
+        return Inertia::render('Sales', [
+            'sales' => $sales
+        ]);
     }
 
     /**

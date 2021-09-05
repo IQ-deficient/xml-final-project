@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Supplier;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class SupplierController extends Controller
 {
@@ -14,7 +15,11 @@ class SupplierController extends Controller
      */
     public function index()
     {
-        return Supplier::all();
+        $suppliers = Supplier::all();
+
+        return Inertia::render('Suppliers', [
+            'suppliers' => $suppliers
+        ]);
     }
 
     /**
@@ -30,7 +35,7 @@ class SupplierController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -41,18 +46,22 @@ class SupplierController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Supplier  $supplier
+     * @param \App\Models\Supplier $supplier
      * @return \Illuminate\Http\Response
      */
     public function show(Supplier $supplier)
     {
-        //
+
+        return Inertia::render('Supplier/Show', [
+            'supplier' => $supplier->only('id', 'name', 'location', 'is_active')
+        ]);
+
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Supplier  $supplier
+     * @param \App\Models\Supplier $supplier
      * @return \Illuminate\Http\Response
      */
     public function edit(Supplier $supplier)
@@ -63,8 +72,8 @@ class SupplierController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Supplier  $supplier
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\Supplier $supplier
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Supplier $supplier)
@@ -75,7 +84,7 @@ class SupplierController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Supplier  $supplier
+     * @param \App\Models\Supplier $supplier
      * @return \Illuminate\Http\Response
      */
     public function destroy(Supplier $supplier)
