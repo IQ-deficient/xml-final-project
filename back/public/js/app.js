@@ -18124,8 +18124,7 @@ function test() {
     },
     // exportToXml(url, filename)
     exportToXml: function exportToXml() {
-      console.log(this.filteredTableData);
-
+      // console.log(this.filteredTableData)
       if (this.filteredTableData.length != 0) {
         var filename = this.filename;
 
@@ -19047,9 +19046,8 @@ function test() {
           for (var k = 0; k < amount; k++) {
             var data = {
               id: items[k].id.toString(),
-              name: items[k].name,
-              price: items[k].price.toString(),
-              description: items[k].description,
+              product_id: items[k].product_id.toString(),
+              quantity: items[k].quantity.toString(),
               is_active: items[k].is_active.toString()
             };
             result.push(Object.assign({}, data));
@@ -19369,8 +19367,7 @@ function test() {
             var data = {
               id: items[k].id.toString(),
               name: items[k].name,
-              price: items[k].price.toString(),
-              description: items[k].description,
+              location: items[k].location,
               is_active: items[k].is_active.toString()
             };
             result.push(Object.assign({}, data));
@@ -21134,7 +21131,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_jet_responsive_nav_link = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("jet-responsive-nav-link");
 
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_jet_banner), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("nav", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Primary Navigation Menu "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Logo "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_inertia_link, {
-    href: _ctx.route('dashboard')
+    href: _ctx.route().current('products')
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_jet_application_mark, {

@@ -292,9 +292,8 @@ export default defineComponent({
                     for (let k = 0; k < amount; k++) {
                         let data = {
                             id: items[k].id.toString(),
-                            name: items[k].name,
-                            price: items[k].price.toString(),
-                            description: items[k].description,
+                            product_id: items[k].product_id.toString(),
+                            quantity: items[k].quantity.toString(),
                             is_active: items[k].is_active.toString(),
                         };
                         result.push(Object.assign({}, data));

@@ -1,10 +1,10 @@
 <template>
     <app-layout>
-<!--              <template #header>-->
-<!--                 <h2 class="font-semibold text-xl text-gray-800 leading-tight">-->
-<!--                    IN PROGRESS-->
-<!--                 </h2>-->
-<!--              </template>-->
+        <!--              <template #header>-->
+        <!--                 <h2 class="font-semibold text-xl text-gray-800 leading-tight">-->
+        <!--                    IN PROGRESS-->
+        <!--                 </h2>-->
+        <!--              </template>-->
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -271,7 +271,7 @@ export default defineComponent({
         },
         // exportToXml(url, filename)
         exportToXml() {
-            console.log(this.filteredTableData)
+            // console.log(this.filteredTableData)
             if (this.filteredTableData.length != 0) {
                 let filename = this.filename
                 if (filename == '') {
@@ -333,8 +333,11 @@ export default defineComponent({
                 if (filename == '') {
                     filename = 'file'
                 }
-                const doc = new jsPDF(
-                    {putOnlyUsedFonts: true, orientation: "landscape", maxLineWidth: 25});
+                const doc = new jsPDF({
+                    putOnlyUsedFonts: true,
+                    orientation: "landscape",
+                    maxLineWidth: 25
+                });
                 let items = this.filteredTableData
 
                 let generateData = function (amount) {
@@ -382,8 +385,7 @@ export default defineComponent({
 
                 doc.save(filename + ".pdf");
             }
-        }
-        ,
+        },
         exportToPdf1() {
             if (this.filteredTableData.length != 0) {
                 let filename = this.filename
@@ -411,8 +413,7 @@ export default defineComponent({
             this.table.totalRecordCount = this.table.rows.length
             // this.chunkedData = this.doChunk(this.$inertia.page.props.products)
             // this.table.rows = this.chunkedData.length !== 0 ? this.chunkedData[0] : []
-        }
-        ,
+        },
         // perfectly working column sort
         doSearch(event) {
             let headerName = event.srcElement.innerText.toLowerCase();
@@ -437,16 +438,13 @@ export default defineComponent({
             } else {
                 this.table.sortable.sort = 'asc';
             }
-        }
-        ,
+        },
         tableLoadingFinish(elements) {
             this.table.isLoading = false;
-        }
-        ,
+        },
         updateCheckedRows(rowsKey) {
             // console.log(rowsKey)
-        }
-        ,
+        },
         // returns the number searched for if found in given range
         findNumberInRange($price, $range) {
             let $first = parseInt($range.split(' - ')[0]);
@@ -456,8 +454,7 @@ export default defineComponent({
                 return $price;
             }
             return 0;
-        }
-        ,
+        },
         debugging(something) {
             console.log(something)
         }

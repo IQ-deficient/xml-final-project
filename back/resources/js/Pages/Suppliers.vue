@@ -301,8 +301,7 @@ export default defineComponent({
                         let data = {
                             id: items[k].id.toString(),
                             name: items[k].name,
-                            price: items[k].price.toString(),
-                            description: items[k].description,
+                            location: items[k].location,
                             is_active: items[k].is_active.toString(),
                         };
                         result.push(Object.assign({}, data));
