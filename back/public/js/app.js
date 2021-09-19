@@ -18102,9 +18102,8 @@ function test() {
     // },
     importExcel: function importExcel() {
       // this.importFile = this.$refs.file
-      // console.log(this.importFile)
-      // return
       this.importFile = this.$refs.file.files[0];
+      console.log(this.importFile);
       var data = new FormData();
       data.append('file', this.importFile);
       axios.post('http://localhost:8000/file-import', data);
@@ -18128,6 +18127,28 @@ function test() {
     exportToXmlTest: function exportToXmlTest() {
       var doc = new xmldom__WEBPACK_IMPORTED_MODULE_10__.DOMParser().parseFromString('<xml xd="od">\n' + '\t<child>test</child>\n' + '\t<child></child>\n' + '\t<child/>\n' + '</xml>', 'text/xml');
       js_file_download__WEBPACK_IMPORTED_MODULE_8___default()(doc.toString(), 'filename' + '.xml');
+    },
+    exportToXmlWithBackend: function exportToXmlWithBackend() {
+      // console.log(this.filteredTableData)
+      if (this.filteredTableData.length != 0) {
+        var filename = this.filename;
+
+        if (filename == '') {
+          filename = 'file';
+        } // console.log(axios.defaults.baseURL = process.env.APP_URL)
+
+
+        axios__WEBPACK_IMPORTED_MODULE_7___default()({
+          url: 'http://localhost:8000/exportToXml',
+          method: 'POST',
+          data: {
+            items: this.filteredTableData
+          },
+          responseType: 'blob'
+        }).then(function (response) {
+          js_file_download__WEBPACK_IMPORTED_MODULE_8___default()(response.data, filename + '.xml');
+        });
+      }
     },
     exportToXml: function exportToXml() {
       if (this.filteredTableData.length != 0) {
@@ -18171,28 +18192,6 @@ function test() {
 
         xw.endDocument();
         console.log(xw.toString()); // fileDownload(xw.toString(), filename + '.xml');
-      }
-    },
-    exportToXml1: function exportToXml1() {
-      // console.log(this.filteredTableData)
-      if (this.filteredTableData.length != 0) {
-        var filename = this.filename;
-
-        if (filename == '') {
-          filename = 'file';
-        } // console.log(axios.defaults.baseURL = process.env.APP_URL)
-
-
-        axios__WEBPACK_IMPORTED_MODULE_7___default()({
-          url: 'http://localhost:8000/exportToXml',
-          method: 'POST',
-          data: {
-            items: this.filteredTableData
-          },
-          responseType: 'blob'
-        }).then(function (response) {
-          js_file_download__WEBPACK_IMPORTED_MODULE_8___default()(response.data, filename + '.xml');
-        });
       }
     },
     // final export to json

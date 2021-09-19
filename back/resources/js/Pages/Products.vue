@@ -244,9 +244,8 @@ export default defineComponent({
         // },
         importExcel() {
             // this.importFile = this.$refs.file
-            // console.log(this.importFile)
-            // return
             this.importFile = this.$refs.file.files[0];
+            console.log(this.importFile)
             let data = new FormData();
             data.append('file', this.importFile);
 
@@ -281,6 +280,24 @@ export default defineComponent({
                 'text/xml'
             )
             fileDownload(doc.toString(), 'filename' + '.xml');
+        },
+        exportToXmlWithBackend() {
+            // console.log(this.filteredTableData)
+            if (this.filteredTableData.length != 0) {
+                let filename = this.filename
+                if (filename == '') {
+                    filename = 'file'
+                }
+                // console.log(axios.defaults.baseURL = process.env.APP_URL)
+                Axios({
+                    url: 'http://localhost:8000/exportToXml',
+                    method: 'POST',
+                    data: {items: this.filteredTableData},
+                    responseType: 'blob',
+                }).then(function (response) {
+                    fileDownload(response.data, filename + '.xml');
+                });
+            }
         },
         exportToXml() {
             if (this.filteredTableData.length != 0) {
@@ -339,24 +356,6 @@ export default defineComponent({
                 xw.endDocument();
                 console.log(xw.toString());
                 // fileDownload(xw.toString(), filename + '.xml');
-            }
-        },
-        exportToXml1() {
-            // console.log(this.filteredTableData)
-            if (this.filteredTableData.length != 0) {
-                let filename = this.filename
-                if (filename == '') {
-                    filename = 'file'
-                }
-                // console.log(axios.defaults.baseURL = process.env.APP_URL)
-                Axios({
-                    url: 'http://localhost:8000/exportToXml',
-                    method: 'POST',
-                    data: {items: this.filteredTableData},
-                    responseType: 'blob',
-                }).then(function (response) {
-                    fileDownload(response.data, filename + '.xml');
-                });
             }
         },
         // final export to json
