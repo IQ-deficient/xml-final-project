@@ -114,6 +114,7 @@ import Axios from 'axios'
 import fileDownload from 'js-file-download'
 import Input from "../Jetstream/Input"
 import {jsPDF} from "jspdf";
+import {DOMParser} from 'xmldom'
 
 function test() {
     console.log(this.table.rows)
@@ -270,7 +271,78 @@ export default defineComponent({
             // window.location.href = 'http://localhost:8000/file-import-export'
         },
         // exportToXml(url, filename)
+        exportToXmlTest() {
+            const doc = new DOMParser().parseFromString(
+                '<xml xd="od">\n' +
+                '\t<child>test</child>\n' +
+                '\t<child></child>\n' +
+                '\t<child/>\n' +
+                '</xml>',
+                'text/xml'
+            )
+            fileDownload(doc.toString(), 'filename' + '.xml');
+        },
         exportToXml() {
+            if (this.filteredTableData.length != 0) {
+                let filename = this.filename
+                if (filename == '') {
+                    filename = 'file'
+                }
+                let data = this.filteredTableData
+                let stringForData = ''
+                for (let i = 0; i < data.length; i++) {
+                    stringForData
+                        += '\t<product>'
+                        + '\t<id>'
+                        + data[i].id
+                        + '</id>\n'
+                        + '\t<name>'
+                        + data[i].name
+                        + '</name>\n'
+                        + '\t<price>'
+                        + data[i].price
+                        + '</price>\n'
+                        + '\t<description>'
+                        + data[i].description
+                        + '</description>\n'
+                        + '</product>\n'
+                }
+                const doc = new DOMParser().parseFromString(
+                    '<products>\n' +
+                    stringForData +
+                    '\t<child></child>\n' +
+                    '</products>',
+                    'text/xml'
+                )
+                fileDownload(doc.toString(), filename + '.xml');
+            }
+        },
+        exportToXml2() {
+            if (this.filteredTableData.length != 0) {
+                let filename = this.filename
+                if (filename == '') {
+                    filename = 'file'
+                }
+                let data = this.filteredTableData
+                // console.log(this.filteredTableData)
+                // return
+                let XMLWriter = require('xml-writer');
+                let xw = new XMLWriter;
+                xw.startDocument();
+                xw.startElement('products');
+                // xw.writeAttribute('foo', 'value');
+
+                for (let i = 0; i < data.length; i++) {
+                    xw.writeElementNS('product').writeElement('name', data[i].name)
+
+                    // xw.text('Some content');
+                }
+                xw.endDocument();
+                console.log(xw.toString());
+                // fileDownload(xw.toString(), filename + '.xml');
+            }
+        },
+        exportToXml1() {
             // console.log(this.filteredTableData)
             if (this.filteredTableData.length != 0) {
                 let filename = this.filename
@@ -405,8 +477,7 @@ export default defineComponent({
                     console.log(response.data)
                 });
             }
-        }
-        ,
+        },
         // fill the table rows from inertia page prop rendered in page controller
         loadTableData() {
             this.table.rows = this.$inertia.page.props.products
@@ -490,12 +561,12 @@ export default defineComponent({
                 }
             });
         },
-
     }
 })
 
 </script>
 <style>
+
 .termsofservice {
     font-family: Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
