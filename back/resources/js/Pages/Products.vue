@@ -310,7 +310,6 @@ export default defineComponent({
                 const doc = new DOMParser().parseFromString(
                     '<products>\n' +
                     stringForData +
-                    '\t<child></child>\n' +
                     '</products>',
                     'text/xml'
                 )

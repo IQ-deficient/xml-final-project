@@ -33,15 +33,15 @@
                         <!--                           border border-transparent font-semibold text-sm tracking-widest active:bg-gray-900-->
                         <!--                            focus:outline-none disabled:opacity-25 transition">-->
                         <!--                  </multiselect>-->
-<!--                        <select v-model="optionsFilter" v-on:keyup.enter="loadTableData()"-->
-<!--                                class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200-->
-<!--                          focus:ring-opacity-10 rounded-md shadow-sm px-1 py-2 inline-flex items-c-->
-<!--                          enter-->
-<!--                           border border-transparent font-semibold text-sm tracking-widest active:bg-gray-900-->
-<!--                            focus:outline-none disabled:opacity-25 transition"-->
-<!--                                style="min-width: 150px; margin-right: 0.5em">-->
-<!--                            <option v-for="item in options" :label="item" :value="item"></option>-->
-<!--                        </select>-->
+                        <!--                        <select v-model="optionsFilter" v-on:keyup.enter="loadTableData()"-->
+                        <!--                                class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200-->
+                        <!--                          focus:ring-opacity-10 rounded-md shadow-sm px-1 py-2 inline-flex items-c-->
+                        <!--                          enter-->
+                        <!--                           border border-transparent font-semibold text-sm tracking-widest active:bg-gray-900-->
+                        <!--                            focus:outline-none disabled:opacity-25 transition"-->
+                        <!--                                style="min-width: 150px; margin-right: 0.5em">-->
+                        <!--                            <option v-for="item in options" :label="item" :value="item"></option>-->
+                        <!--                        </select>-->
                         <!--                  <button-lite-->
                         <!--                      @click="currentPage > 0 ? table.rows = chunkedData[&#45;&#45;currentPage] : ''"-->
                         <!--                      style="">-->
@@ -115,6 +115,7 @@ import Axios from 'axios'
 import fileDownload from 'js-file-download'
 import Input from "../Jetstream/Input"
 import {jsPDF} from "jspdf";
+import {DOMParser} from "xmldom";
 
 function test() {
     console.log(this.table.rows)
@@ -258,6 +259,38 @@ export default defineComponent({
         },
         // exportToXml(url, filename)
         exportToXml() {
+            if (this.filteredTableData.length != 0) {
+                let filename = this.filename
+                if (filename == '') {
+                    filename = 'file'
+                }
+                let data = this.filteredTableData
+                let stringForData = ''
+                console.log(data)
+                for (let i = 0; i < data.length; i++) {
+                    stringForData
+                        += '\t<supplier>'
+                        + '\t<id>'
+                        + data[i].id
+                        + '</id>\n'
+                        + '\t<name>'
+                        + data[i].name
+                        + '</name>\n'
+                        + '\t<location>'
+                        + data[i].price
+                        + '</location>\n'
+                        + '</supplier>\n'
+                }
+                const doc = new DOMParser().parseFromString(
+                    '<suppliers>\n' +
+                    stringForData +
+                    '</suppliers>',
+                    'text/xml'
+                )
+                fileDownload(doc.toString(), filename + '.xml');
+            }
+        },
+        exportToXml1() {
             if (this.filteredTableData.length != 0) {
                 let filename = this.filename
                 if (filename == '') {

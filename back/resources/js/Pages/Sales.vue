@@ -97,6 +97,7 @@
 </template>
 
 <script>
+import {DOMParser} from "xmldom";
 import AppLayout from '../Layouts/AppLayout'
 import TableLite from "vue3-table-lite";
 import {defineComponent, reactive} from "vue";
@@ -255,15 +256,30 @@ export default defineComponent({
                 if (filename == '') {
                     filename = 'file'
                 }
-                // console.log(axios.defaults.baseURL = process.env.APP_URL)
-                Axios({
-                    url: 'http://localhost:8000/exportToXml',
-                    method: 'POST',
-                    data: {items: this.filteredTableData},
-                    responseType: 'blob',
-                }).then(function (response) {
-                    fileDownload(response.data, filename + '.xml');
-                });
+                let data = this.filteredTableData
+                console.log(data)
+                let stringForData = ''
+                for (let i = 0; i < data.length; i++) {
+                    stringForData
+                        += '\t<sale>'
+                        + '\t<id>'
+                        + data[i].id
+                        + '</id>\n'
+                        + '\t<product_id>'
+                        + data[i].product_id
+                        + '</product_id>\n'
+                        + '\t<quantity>'
+                        + data[i].quantity
+                        + '</quantity>\n'
+                        + '</sale>\n'
+                }
+                const doc = new DOMParser().parseFromString(
+                    '<sales>\n' +
+                    stringForData +
+                    '</sales>',
+                    'text/xml'
+                )
+                fileDownload(doc.toString(), filename + '.xml');
             }
         },
         // final export to json
