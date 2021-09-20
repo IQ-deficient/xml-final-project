@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Sale;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class SaleController extends Controller
@@ -15,7 +16,17 @@ class SaleController extends Controller
      */
     public function index()
     {
-        $sales = Sale::all();
+        $sales = DB::table('sales')
+            ->join(
+                'products',
+                'sales.product_id',
+                '=',
+                'products.id'
+            )
+            ->select('*')
+            ->get();
+
+//        dd($sales);
 
         return Inertia::render('Sales', [
             'sales' => $sales
@@ -35,7 +46,7 @@ class SaleController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -46,7 +57,7 @@ class SaleController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Sale  $sale
+     * @param \App\Models\Sale $sale
      * @return \Illuminate\Http\Response
      */
     public function show(Sale $sale)
@@ -57,7 +68,7 @@ class SaleController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Sale  $sale
+     * @param \App\Models\Sale $sale
      * @return \Illuminate\Http\Response
      */
     public function edit(Sale $sale)
@@ -68,8 +79,8 @@ class SaleController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Sale  $sale
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\Sale $sale
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Sale $sale)
@@ -80,7 +91,7 @@ class SaleController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Sale  $sale
+     * @param \App\Models\Sale $sale
      * @return \Illuminate\Http\Response
      */
     public function destroy(Sale $sale)

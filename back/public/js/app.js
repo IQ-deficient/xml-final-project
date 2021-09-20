@@ -18913,20 +18913,14 @@ function test() {
         isLoading: false,
         isReSearch: false,
         columns: [{
-          label: "Product ID",
-          field: "product_id",
+          label: "Name",
+          field: "name",
           width: "15%",
           sortable: true,
-          isKey: true // display: function (row) {
-          //     return (
-          //         '<a href="#" data-id="' +
-          //         row.user_id +
-          //         '" class="is-rows-el name-btn">' +
-          //         row.name +
-          //         "</button>"
-          //     );
-          // },
-
+          isKey: true,
+          display: function display(row) {
+            return '<a href="#" data-id="' + row.user_id + '" class="is-rows-el name-btn">' + row.name + "</button>";
+          }
         }, {
           label: "Quantity",
           field: "quantity",
@@ -19123,6 +19117,9 @@ function test() {
       this.table.totalRecordCount = this.table.rows.length; // this.chunkedData = this.doChunk(this.$inertia.page.props.sales)
       // this.table.rows = this.chunkedData.length !== 0 ? this.chunkedData[0] : []
     },
+    debug: function debug() {
+      console.log(this.$inertia.page.props.sales);
+    },
     // perfectly working column sort
     doSearch: function doSearch(event) {
       var headerName = event.srcElement.innerText.toLowerCase();
@@ -19169,7 +19166,7 @@ function test() {
 
       return this.table.rows.filter(function (row) {
         // return row.name.toLowerCase().includes(searchTerm)
-        return row;
+        return row.name.toLowerCase().includes(searchTerm);
       });
     }
   }
@@ -24220,21 +24217,12 @@ var _hoisted_4 = {
     "justify-content": "end"
   }
 };
-var _hoisted_5 = {
-  "for": "file",
-  style: {
-    "margin-right": "0.5em"
-  },
-  "class": "inline-flex items-center\n                   px-1 py-2 bg-indigo-500 border border-transparent\n                  rounded-md font-semibold text-sm text-white uppercase tracking-widest\n                  hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900\n                  focus:ring focus:ring-gray-300 disabled:opacity-25 transition custom-file-upload"
-};
 
-var _hoisted_6 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Import ");
+var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Export PDF");
 
-var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Export PDF");
+var _hoisted_6 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Export JSON ");
 
-var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Export JSON ");
-
-var _hoisted_9 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Export XML ");
+var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Export XML ");
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_button_lite = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("button-lite");
@@ -24245,17 +24233,23 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_app_layout, null, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("               <welcome/>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("label", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("input", {
-        type: "file",
-        id: "file",
-        ref: "file",
-        onChange: _cache[1] || (_cache[1] = function ($event) {
-          return _ctx.importExcel();
-        })
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("               <welcome/>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                        <label for=\"file\" style=\"margin-right: 0.5em\" class=\"inline-flex items-center"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                   px-1 py-2 bg-indigo-500 border border-transparent"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                  rounded-md font-semibold text-sm text-white uppercase tracking-widest"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                  hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                  focus:ring focus:ring-gray-300 disabled:opacity-25 transition custom-file-upload\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                            <input type=\"file\" id=\"file\" ref=\"file\" v-on:change=\"importExcel()\"/> Import"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                        </label>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("input", {
+        "onUpdate:modelValue": _cache[1] || (_cache[1] = function ($event) {
+          return _ctx.filter = $event;
+        }),
+        onKeyup: _cache[2] || (_cache[2] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withKeys)(function ($event) {
+          return _ctx.loadTableData();
+        }, ["enter"])),
+        placeholder: "Search name",
+        "class": "border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200\n                          focus:ring-opacity-10 rounded-md shadow-sm px-1 py-2 inline-flex items-center\n                           border border-transparent font-semibold text-sm tracking-widest active:bg-gray-900\n                            focus:outline-none disabled:opacity-25 transition",
+        style: {
+          "margin-right": "0.5em",
+          "max-width": "150px"
+        }
       }, null, 544
       /* HYDRATE_EVENTS, NEED_PATCH */
-      ), _hoisted_6]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                        <input v-model=\"filter\" v-on:keyup.enter=\"loadTableData()\" placeholder=\"Search name\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                               class=\"border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                          focus:ring-opacity-10 rounded-md shadow-sm px-1 py-2 inline-flex items-center"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                           border border-transparent font-semibold text-sm tracking-widest active:bg-gray-900"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                            focus:outline-none disabled:opacity-25 transition\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                               style=\"margin-right: 0.5em; max-width: 150px\"/>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                  <multiselect"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                      v-model=\"selected\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                      :options=\"options\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                     class=\"border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                          focus:ring-opacity-10 rounded-md shadow-sm px-4 py-2 inline-flex items-center"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                           border border-transparent font-semibold text-sm tracking-widest active:bg-gray-900"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                            focus:outline-none disabled:opacity-25 transition\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                  </multiselect>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                        <select v-model=\"optionsFilter\" v-on:keyup.enter=\"loadTableData()\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                class=\"border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                          focus:ring-opacity-10 rounded-md shadow-sm px-1 py-2 inline-flex items-c"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                          enter"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                           border border-transparent font-semibold text-sm tracking-widest active:bg-gray-900"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                            focus:outline-none disabled:opacity-25 transition\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                style=\"min-width: 150px; margin-right: 0.5em\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                            <option v-for=\"item in options\" :label=\"item\" :value=\"item\"></option>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                        </select>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                  <button-lite"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                      @click=\"currentPage > 0 ? table.rows = chunkedData[&#45;&#45;currentPage] : ''\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                      style=\"\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                     {{ '<-' }}"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                  </button-lite>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                  <div class=\"border-gray-300 focus:border-indigo-300 shadow-sm px-1 py-2 inline-flex items-center"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                           border border-transparent font-semibold text-sm tracking-widest active:bg-gray-900"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                            focus:outline-none disabled:opacity-25 transition\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                     {{ this.currentPage + 1 }}"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                  </div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                  <button-lite"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                      @click=\"currentPage < chunkedData.length -1 ? table.rows = chunkedData[++currentPage] : ''\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                      style=\"margin-right: 0.5em\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                     {{ '->' }}"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                  </button-lite>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" maybe and just maybe group these "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_button_lite, {
-        onClick: _cache[2] || (_cache[2] = function ($event) {
+      ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, _ctx.filter]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                  <multiselect"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                      v-model=\"selected\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                      :options=\"options\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                     class=\"border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                          focus:ring-opacity-10 rounded-md shadow-sm px-4 py-2 inline-flex items-center"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                           border border-transparent font-semibold text-sm tracking-widest active:bg-gray-900"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                            focus:outline-none disabled:opacity-25 transition\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                  </multiselect>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                        <select v-model=\"optionsFilter\" v-on:keyup.enter=\"loadTableData()\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                class=\"border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                          focus:ring-opacity-10 rounded-md shadow-sm px-1 py-2 inline-flex items-c"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                          enter"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                           border border-transparent font-semibold text-sm tracking-widest active:bg-gray-900"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                            focus:outline-none disabled:opacity-25 transition\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                style=\"min-width: 150px; margin-right: 0.5em\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                            <option v-for=\"item in options\" :label=\"item\" :value=\"item\"></option>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                        </select>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                  <button-lite"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                      @click=\"currentPage > 0 ? table.rows = chunkedData[&#45;&#45;currentPage] : ''\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                      style=\"\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                     {{ '<-' }}"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                  </button-lite>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                  <div class=\"border-gray-300 focus:border-indigo-300 shadow-sm px-1 py-2 inline-flex items-center"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                           border border-transparent font-semibold text-sm tracking-widest active:bg-gray-900"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                            focus:outline-none disabled:opacity-25 transition\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                     {{ this.currentPage + 1 }}"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                  </div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                  <button-lite"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                      @click=\"currentPage < chunkedData.length -1 ? table.rows = chunkedData[++currentPage] : ''\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                      style=\"margin-right: 0.5em\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                     {{ '->' }}"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                  </button-lite>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" maybe and just maybe group these "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_button_lite, {
+        onClick: _cache[3] || (_cache[3] = function ($event) {
           return _ctx.exportToPdf();
         }),
         style: {
@@ -24263,13 +24257,13 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         }
       }, {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-          return [_hoisted_7];
+          return [_hoisted_5];
         }),
         _: 1
         /* STABLE */
 
       }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_button_lite, {
-        onClick: _cache[3] || (_cache[3] = function ($event) {
+        onClick: _cache[4] || (_cache[4] = function ($event) {
           return _ctx.exportToJson();
         }),
         style: {
@@ -24278,14 +24272,14 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         }
       }, {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-          return [_hoisted_8];
+          return [_hoisted_6];
         }),
         _: 1
         /* STABLE */
 
       }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_button_lite, {
-        onClick: _cache[4] || (_cache[4] = function ($event) {
-          return _ctx.exportToXml();
+        onClick: _cache[5] || (_cache[5] = function ($event) {
+          return _ctx.debug();
         }),
         style: {
           "float": "right",
@@ -24293,13 +24287,13 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         }
       }, {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-          return [_hoisted_9];
+          return [_hoisted_7];
         }),
         _: 1
         /* STABLE */
 
       }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("input", {
-        "onUpdate:modelValue": _cache[5] || (_cache[5] = function ($event) {
+        "onUpdate:modelValue": _cache[6] || (_cache[6] = function ($event) {
           return _ctx.filename = $event;
         }),
         placeholder: "File name...",
@@ -24320,7 +24314,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         total: _ctx.table.totalRecordCount,
         sortable: _ctx.table.sortable,
         messages: _ctx.table.messages,
-        onClick: _cache[6] || (_cache[6] = function ($event) {
+        onClick: _cache[7] || (_cache[7] = function ($event) {
           return _ctx.doSearch($event);
         }),
         onIsFinished: _ctx.tableLoadingFinish,
@@ -24365,21 +24359,12 @@ var _hoisted_4 = {
     "justify-content": "end"
   }
 };
-var _hoisted_5 = {
-  "for": "file",
-  style: {
-    "margin-right": "0.5em"
-  },
-  "class": "inline-flex items-center\n                   px-1 py-2 bg-indigo-500 border border-transparent\n                  rounded-md font-semibold text-sm text-white uppercase tracking-widest\n                  hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900\n                  focus:ring focus:ring-gray-300 disabled:opacity-25 transition custom-file-upload"
-};
 
-var _hoisted_6 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Import ");
+var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Export PDF");
 
-var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Export PDF");
+var _hoisted_6 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Export JSON ");
 
-var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Export JSON ");
-
-var _hoisted_9 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Export XML ");
+var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Export XML ");
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_button_lite = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("button-lite");
@@ -24390,20 +24375,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_app_layout, null, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("               <welcome/>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("label", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("input", {
-        type: "file",
-        id: "file",
-        ref: "file",
-        onChange: _cache[1] || (_cache[1] = function ($event) {
-          return _ctx.importExcel();
-        })
-      }, null, 544
-      /* HYDRATE_EVENTS, NEED_PATCH */
-      ), _hoisted_6]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("input", {
-        "onUpdate:modelValue": _cache[2] || (_cache[2] = function ($event) {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("               <welcome/>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                        <label for=\"file\" style=\"margin-right: 0.5em\" class=\"inline-flex items-center"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                   px-1 py-2 bg-indigo-500 border border-transparent"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                  rounded-md font-semibold text-sm text-white uppercase tracking-widest"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                  hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                  focus:ring focus:ring-gray-300 disabled:opacity-25 transition custom-file-upload\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                            <input type=\"file\" id=\"file\" ref=\"file\" v-on:change=\"importExcel()\"/> Import"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                        </label>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("input", {
+        "onUpdate:modelValue": _cache[1] || (_cache[1] = function ($event) {
           return _ctx.filter = $event;
         }),
-        onKeyup: _cache[3] || (_cache[3] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withKeys)(function ($event) {
+        onKeyup: _cache[2] || (_cache[2] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withKeys)(function ($event) {
           return _ctx.loadTableData();
         }, ["enter"])),
         placeholder: "Search name",
@@ -24415,10 +24391,10 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       }, null, 544
       /* HYDRATE_EVENTS, NEED_PATCH */
       ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, _ctx.filter]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("input", {
-        "onUpdate:modelValue": _cache[4] || (_cache[4] = function ($event) {
+        "onUpdate:modelValue": _cache[3] || (_cache[3] = function ($event) {
           return _ctx.filter2 = $event;
         }),
-        onKeyup: _cache[5] || (_cache[5] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withKeys)(function ($event) {
+        onKeyup: _cache[4] || (_cache[4] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withKeys)(function ($event) {
           return _ctx.loadTableData();
         }, ["enter"])),
         placeholder: "Search location",
@@ -24430,7 +24406,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       }, null, 544
       /* HYDRATE_EVENTS, NEED_PATCH */
       ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, _ctx.filter2]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                  <multiselect"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                      v-model=\"selected\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                      :options=\"options\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                     class=\"border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                          focus:ring-opacity-10 rounded-md shadow-sm px-4 py-2 inline-flex items-center"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                           border border-transparent font-semibold text-sm tracking-widest active:bg-gray-900"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                            focus:outline-none disabled:opacity-25 transition\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                  </multiselect>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                        <select v-model=\"optionsFilter\" v-on:keyup.enter=\"loadTableData()\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                class=\"border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                          focus:ring-opacity-10 rounded-md shadow-sm px-1 py-2 inline-flex items-c"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                          enter"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                           border border-transparent font-semibold text-sm tracking-widest active:bg-gray-900"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                            focus:outline-none disabled:opacity-25 transition\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                style=\"min-width: 150px; margin-right: 0.5em\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                            <option v-for=\"item in options\" :label=\"item\" :value=\"item\"></option>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                        </select>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                  <button-lite"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                      @click=\"currentPage > 0 ? table.rows = chunkedData[&#45;&#45;currentPage] : ''\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                      style=\"\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                     {{ '<-' }}"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                  </button-lite>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                  <div class=\"border-gray-300 focus:border-indigo-300 shadow-sm px-1 py-2 inline-flex items-center"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                           border border-transparent font-semibold text-sm tracking-widest active:bg-gray-900"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                            focus:outline-none disabled:opacity-25 transition\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                     {{ this.currentPage + 1 }}"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                  </div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                  <button-lite"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                      @click=\"currentPage < chunkedData.length -1 ? table.rows = chunkedData[++currentPage] : ''\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                      style=\"margin-right: 0.5em\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                     {{ '->' }}"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                  </button-lite>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" maybe and just maybe group these "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_button_lite, {
-        onClick: _cache[6] || (_cache[6] = function ($event) {
+        onClick: _cache[5] || (_cache[5] = function ($event) {
           return _ctx.exportToPdf();
         }),
         style: {
@@ -24438,13 +24414,13 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         }
       }, {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-          return [_hoisted_7];
+          return [_hoisted_5];
         }),
         _: 1
         /* STABLE */
 
       }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_button_lite, {
-        onClick: _cache[7] || (_cache[7] = function ($event) {
+        onClick: _cache[6] || (_cache[6] = function ($event) {
           return _ctx.exportToJson();
         }),
         style: {
@@ -24453,13 +24429,13 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         }
       }, {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-          return [_hoisted_8];
+          return [_hoisted_6];
         }),
         _: 1
         /* STABLE */
 
       }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_button_lite, {
-        onClick: _cache[8] || (_cache[8] = function ($event) {
+        onClick: _cache[7] || (_cache[7] = function ($event) {
           return _ctx.exportToXml();
         }),
         style: {
@@ -24468,13 +24444,13 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         }
       }, {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-          return [_hoisted_9];
+          return [_hoisted_7];
         }),
         _: 1
         /* STABLE */
 
       }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("input", {
-        "onUpdate:modelValue": _cache[9] || (_cache[9] = function ($event) {
+        "onUpdate:modelValue": _cache[8] || (_cache[8] = function ($event) {
           return _ctx.filename = $event;
         }),
         placeholder: "File name...",
@@ -24495,7 +24471,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         total: _ctx.table.totalRecordCount,
         sortable: _ctx.table.sortable,
         messages: _ctx.table.messages,
-        onClick: _cache[10] || (_cache[10] = function ($event) {
+        onClick: _cache[9] || (_cache[9] = function ($event) {
           return _ctx.doSearch($event);
         }),
         onIsFinished: _ctx.tableLoadingFinish,

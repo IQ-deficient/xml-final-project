@@ -6,13 +6,13 @@
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <!--               <welcome/>-->
                     <div style="padding: 0.5em; justify-content: end">
-                        <label for="file" style="margin-right: 0.5em" class="inline-flex items-center
-                   px-1 py-2 bg-indigo-500 border border-transparent
-                  rounded-md font-semibold text-sm text-white uppercase tracking-widest
-                  hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900
-                  focus:ring focus:ring-gray-300 disabled:opacity-25 transition custom-file-upload">
-                            <input type="file" id="file" ref="file" v-on:change="importExcel()"/> Import
-                        </label>
+<!--                        <label for="file" style="margin-right: 0.5em" class="inline-flex items-center-->
+<!--                   px-1 py-2 bg-indigo-500 border border-transparent-->
+<!--                  rounded-md font-semibold text-sm text-white uppercase tracking-widest-->
+<!--                  hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900-->
+<!--                  focus:ring focus:ring-gray-300 disabled:opacity-25 transition custom-file-upload">-->
+<!--                            <input type="file" id="file" ref="file" v-on:change="importExcel()"/> Import-->
+<!--                        </label>-->
                         <input v-model="filter" v-on:keyup.enter="loadTableData()" placeholder="Search name"
                                class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200
                           focus:ring-opacity-10 rounded-md shadow-sm px-1 py-2 inline-flex items-center
@@ -371,16 +371,14 @@ export default defineComponent({
 
                 doc.save(filename + ".pdf");
             }
-        }
-        ,
+        },
         // fill the table rows from inertia page prop rendered in page controller
         loadTableData() {
             this.table.rows = this.$inertia.page.props.suppliers
             this.table.totalRecordCount = this.table.rows.length
             // this.chunkedData = this.doChunk(this.$inertia.page.props.suppliers)
             // this.table.rows = this.chunkedData.length !== 0 ? this.chunkedData[0] : []
-        }
-        ,
+        },
         // perfectly working column sort
         doSearch(event) {
             let headerName = event.srcElement.innerText.toLowerCase();
@@ -405,16 +403,13 @@ export default defineComponent({
             } else {
                 this.table.sortable.sort = 'asc';
             }
-        }
-        ,
+        },
         tableLoadingFinish(elements) {
             this.table.isLoading = false;
-        }
-        ,
+        },
         updateCheckedRows(rowsKey) {
             // console.log(rowsKey)
-        }
-        ,
+        },
         // returns the number searched for if found in given range
         findNumberInRange($price, $range) {
             let $first = parseInt($range.split(' - ')[0]);
@@ -424,8 +419,7 @@ export default defineComponent({
                 return $price;
             }
             return 0;
-        }
-        ,
+        },
         debugging(something) {
             console.log(something)
         }
@@ -465,7 +459,6 @@ export default defineComponent({
             //     }
             // });
         },
-
     }
 })
 

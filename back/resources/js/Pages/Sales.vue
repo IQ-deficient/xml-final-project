@@ -6,19 +6,19 @@
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <!--               <welcome/>-->
                     <div style="padding: 0.5em; justify-content: end">
-                        <label for="file" style="margin-right: 0.5em" class="inline-flex items-center
-                   px-1 py-2 bg-indigo-500 border border-transparent
-                  rounded-md font-semibold text-sm text-white uppercase tracking-widest
-                  hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900
-                  focus:ring focus:ring-gray-300 disabled:opacity-25 transition custom-file-upload">
-                            <input type="file" id="file" ref="file" v-on:change="importExcel()"/> Import
-                        </label>
-<!--                        <input v-model="filter" v-on:keyup.enter="loadTableData()" placeholder="Search name"-->
-<!--                               class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200-->
-<!--                          focus:ring-opacity-10 rounded-md shadow-sm px-1 py-2 inline-flex items-center-->
-<!--                           border border-transparent font-semibold text-sm tracking-widest active:bg-gray-900-->
-<!--                            focus:outline-none disabled:opacity-25 transition"-->
-<!--                               style="margin-right: 0.5em; max-width: 150px"/>-->
+                        <!--                        <label for="file" style="margin-right: 0.5em" class="inline-flex items-center-->
+                        <!--                   px-1 py-2 bg-indigo-500 border border-transparent-->
+                        <!--                  rounded-md font-semibold text-sm text-white uppercase tracking-widest-->
+                        <!--                  hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900-->
+                        <!--                  focus:ring focus:ring-gray-300 disabled:opacity-25 transition custom-file-upload">-->
+                        <!--                            <input type="file" id="file" ref="file" v-on:change="importExcel()"/> Import-->
+                        <!--                        </label>-->
+                        <input v-model="filter" v-on:keyup.enter="loadTableData()" placeholder="Search name"
+                               class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200
+                          focus:ring-opacity-10 rounded-md shadow-sm px-1 py-2 inline-flex items-center
+                           border border-transparent font-semibold text-sm tracking-widest active:bg-gray-900
+                            focus:outline-none disabled:opacity-25 transition"
+                               style="margin-right: 0.5em; max-width: 150px"/>
                         <!--                  <multiselect-->
                         <!--                      v-model="selected"-->
                         <!--                      :options="options"-->
@@ -56,7 +56,7 @@
                         <button-lite @click="exportToPdf()" style="float: right;">Export PDF</button-lite>
                         <button-lite @click="exportToJson()" style="float: right; margin-right: 0.5em">Export JSON
                         </button-lite>
-                        <button-lite @click="exportToXml()" style="float: right; margin-right: 0.5em">Export XML
+                        <button-lite @click="debug()" style="float: right; margin-right: 0.5em">Export XML
                         </button-lite>
                         <input v-model="filename" placeholder="File name..."
                                class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200
@@ -131,20 +131,20 @@ export default defineComponent({
                 isReSearch: false,
                 columns: [
                     {
-                        label: "Product ID",
-                        field: "product_id",
+                        label: "Name",
+                        field: "name",
                         width: "15%",
                         sortable: true,
                         isKey: true,
-                        // display: function (row) {
-                        //     return (
-                        //         '<a href="#" data-id="' +
-                        //         row.user_id +
-                        //         '" class="is-rows-el name-btn">' +
-                        //         row.name +
-                        //         "</button>"
-                        //     );
-                        // },
+                        display: function (row) {
+                            return (
+                                '<a href="#" data-id="' +
+                                row.user_id +
+                                '" class="is-rows-el name-btn">' +
+                                row.name +
+                                "</button>"
+                            );
+                        },
                     },
                     {
                         label: "Quantity",
@@ -346,16 +346,17 @@ export default defineComponent({
 
                 doc.save(filename + ".pdf");
             }
-        }
-        ,
+        },
         // fill the table rows from inertia page prop rendered in page controller
         loadTableData() {
             this.table.rows = this.$inertia.page.props.sales
             this.table.totalRecordCount = this.table.rows.length
             // this.chunkedData = this.doChunk(this.$inertia.page.props.sales)
             // this.table.rows = this.chunkedData.length !== 0 ? this.chunkedData[0] : []
-        }
-        ,
+        },
+        debug() {
+            console.log(this.$inertia.page.props.sales)
+        },
         // perfectly working column sort
         doSearch(event) {
             let headerName = event.srcElement.innerText.toLowerCase();
@@ -380,16 +381,13 @@ export default defineComponent({
             } else {
                 this.table.sortable.sort = 'asc';
             }
-        }
-        ,
+        },
         tableLoadingFinish(elements) {
             this.table.isLoading = false;
-        }
-        ,
+        },
         updateCheckedRows(rowsKey) {
             // console.log(rowsKey)
-        }
-        ,
+        },
         debugging(something) {
             console.log(something)
         }
@@ -406,11 +404,9 @@ export default defineComponent({
             // filter table data by search string for item name and location
             return this.table.rows.filter(row => {
                 // return row.name.toLowerCase().includes(searchTerm)
-                return row
+                return row.name.toLowerCase().includes(searchTerm)
             });
-
         },
-
     }
 })
 
